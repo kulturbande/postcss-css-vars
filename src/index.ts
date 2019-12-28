@@ -1,9 +1,13 @@
-import postcss from 'postcss';
+import postcss, { Node, Result, Root } from 'postcss';
+import { Parser } from './services/parser';
 
 const plugin = postcss.plugin('postcss-css-variables', (opts = {}) => {
     // Work with options here
 
-    return (root, result) => {};
+    return (root: Root, result: Result) => {
+        const parser = new Parser(root);
+        return root;
+    };
 });
 
 module.exports = plugin;
