@@ -1,8 +1,10 @@
 # PostCSS Css Variables
 
-[PostCSS] plugin for CSS Custom Properties.
+[![Build Status](https://travis-ci.com/kulturbande/postcss-css-variables.svg?branch=master)](https://travis-ci.com/kulturbande/postcss-css-variables)
 
-[PostCSS]: https://github.com/postcss/postcss
+[PostCSS] plugin for CSS Custom Properties. This repository is currentyly in development and will be used to support older browser, that are not Custom Properties - enabled.
+
+[postcss]: https://github.com/postcss/postcss
 
 ```css
 .foo {
@@ -12,7 +14,7 @@
 
 ```css
 .foo {
-  /* Output example */
+    /* Output example */
 }
 ```
 
