@@ -9,6 +9,10 @@ export class Parser {
         this.parseRoot(root);
     }
 
+    public getVariables(): VariableInterface[] {
+        return Object.values(this.variables);
+    }
+
     /**
      * parse the AST root to search for variables
      * @param root
@@ -32,18 +36,19 @@ export class Parser {
         const setter = declaration.prop.match(/^(--\w+)/);
         const getter = declaration.value.match(/^var\((--\w+)\)/);
 
+        const initializeVariable = (name: string): string => {
+            if (typeof this.variables[name] === 'undefined') {
+                this.variables[name] = new Variable(name);
+            }
+            return name;
+        };
+
         if (setter !== null) {
-            const name: string = setter[1];
-            if (typeof this.variables[name] === 'undefined') {
-                this.variables[name] = new Variable(name);
-            }
-            this.variables[name].addSetterRule(rule);
+            const name: string = initializeVariable(setter[1]);
+            this.variables[name].addSetterDeclaration(declaration);
         } else if (getter !== null) {
-            const name: string = getter[1];
-            if (typeof this.variables[name] === 'undefined') {
-                this.variables[name] = new Variable(name);
-            }
-            this.variables[name].addGetterRule(rule);
+            const name: string = initializeVariable(getter[1]);
+            this.variables[name].addGetterDeclaration(declaration);
         }
     }
 }

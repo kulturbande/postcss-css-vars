@@ -1,17 +1,25 @@
 import { VariableInterface } from './variable.interface';
-import { Rule } from 'postcss';
+import { Declaration } from 'postcss';
 
 export class Variable implements VariableInterface {
-    private setterRules: Rule[] = [];
-    private getterRules: Rule[] = [];
+    private setterDeclarations: Declaration[] = [];
+    private getterDeclarations: Declaration[] = [];
 
     constructor(public name: string) {}
 
-    public addSetterRule(rule: Rule) {
-        this.setterRules.push(rule);
+    public addSetterDeclaration(declaration: Declaration) {
+        this.setterDeclarations.push(declaration);
     }
 
-    public addGetterRule(rule: Rule) {
-        this.getterRules.push(rule);
+    public addGetterDeclaration(declaration: Declaration) {
+        this.getterDeclarations.push(declaration);
+    }
+
+    public getSetterDeclarations(): Declaration[] {
+        return this.setterDeclarations;
+    }
+
+    public getGetterDeclarations(): Declaration[] {
+        return this.getterDeclarations;
     }
 }

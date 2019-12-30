@@ -1,8 +1,11 @@
-import { Rule } from 'postcss';
+import { Declaration } from 'postcss';
 
 export interface VariableInterface {
     name: string;
 
-    addSetterRule(rule: Rule): void;
-    addGetterRule(rule: Rule): void;
+    addSetterDeclaration(declaration: Declaration): void;
+    addGetterDeclaration(declaration: Declaration): void;
+
+    getSetterDeclarations(): Declaration[];
+    getGetterDeclarations(): Declaration[];
 }
