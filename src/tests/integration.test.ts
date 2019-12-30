@@ -8,6 +8,10 @@ describe('Direct usage', () => {
     it('should preserve the declaration position', async () => {
         await testFixture('direct_usage/advanced');
     });
+
+    it('should usable for multiple occasions', async () => {
+        await testFixture('direct_usage/multiple_usage');
+    });
 });
 
 describe('Root Level', () => {
