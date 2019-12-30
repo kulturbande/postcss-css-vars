@@ -14,4 +14,8 @@ describe('Root Level', () => {
     it('should basicly work for :root - pseudo selector', async () => {
         await testFixture('root_level/root');
     });
+
+    it('should basicly work for body selector', async () => {
+        await testFixture('root_level/body');
+    });
 });

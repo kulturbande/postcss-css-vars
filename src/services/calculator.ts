@@ -28,7 +28,7 @@ export class Calculator {
         const setterRule = this.getParentRule(setterDeclaration);
         const getterRule = this.getParentRule(getterDeclaration);
 
-        if (setterRule?.selector === ':root') {
+        if (setterRule?.selector === ':root' || setterRule?.selector === 'body') {
             // root level declarations
             this.globalVariables[variable.name] = setterDeclaration.value;
             this.removeDeclartaion(setterDeclaration);
