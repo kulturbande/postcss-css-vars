@@ -33,8 +33,8 @@ export class Parser {
      * @param rule
      */
     private parseDeclaration(declaration: Declaration, rule: Rule) {
-        const setter = declaration.prop.match(/^(--\w+)/);
-        const getter = declaration.value.match(/^var\((--\w+)\)/);
+        const setter = declaration.prop.match(/^(--[\w|\-]+)/);
+        const getter = declaration.value.match(/^var\((--[\w|\-]+)\)/);
 
         const initializeVariable = (name: string): string => {
             if (typeof this.variables[name] === 'undefined') {
