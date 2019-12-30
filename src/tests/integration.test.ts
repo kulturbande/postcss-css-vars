@@ -9,3 +9,9 @@ describe('Direct usage', () => {
         await testFixture('direct_usage/advanced');
     });
 });
+
+describe('Root Level', () => {
+    it('should basicly work for :root - pseudo selector', async () => {
+        await testFixture('root_level/root');
+    });
+});
