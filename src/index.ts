@@ -1,15 +1,16 @@
-import postcss, { Node, Result, Root } from 'postcss';
+import postcss, { Result, Root } from 'postcss';
 import { Parser } from './services/parser';
 import { Calculator } from './services/calculator';
+import { Normalizer } from './services/normalizer';
 
 const plugin = postcss.plugin('postcss-css-variables', (opts = {}) => {
-    // Work with options here
-
     return (root: Root, result: Result) => {
         const parser = new Parser(root);
-        const calculator = new Calculator(root, parser.getVariables());
+        const calculator = new Calculator(parser.getVariables());
+        const normalizer = new Normalizer(root, calculator.calculateRulePermutations());
 
-        calculator.calculateRulePermutations();
+        normalizer.normalize();
+
         return root;
     };
 });

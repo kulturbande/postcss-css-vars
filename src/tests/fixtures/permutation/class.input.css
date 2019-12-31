@@ -1,0 +1,11 @@
+:root {
+    --color: red;
+}
+
+.foo {
+    color: var(--color);
+}
+
+.warning {
+    --color: orange;
+}

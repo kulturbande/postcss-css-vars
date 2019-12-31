@@ -23,3 +23,19 @@ describe('Root Level', () => {
         await testFixture('root_level/body');
     });
 });
+
+describe('Permutation', () => {
+    it('should create multiple classes', async () => {
+        await testFixture('permutation/class');
+    });
+
+    // it('should create one class permutation for multiple variables', async () => {
+    //     await testFixture('permutation/class');
+    // });
+});
+
+// describe('Media Queries', () => {
+//     it('should support media queries', async () => {
+//         await testFixture('permutation/class');
+//     });
+// });
