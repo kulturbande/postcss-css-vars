@@ -1,0 +1,14 @@
+.foo {
+    color: pink;
+    font-weight: 700;
+}
+
+.orange .foo {
+    color: orange;
+    font-weight: 700;
+}
+
+.fine .foo {
+    color: pink;
+    font-weight: 400;
+}

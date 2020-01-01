@@ -29,9 +29,9 @@ describe('Permutation', () => {
         await testFixture('permutation/class');
     });
 
-    // it('should create one class permutation for multiple variables', async () => {
-    //     await testFixture('permutation/class');
-    // });
+    it("should use global variables if the varaible isn't avaiable", async () => {
+        await testFixture('permutation/multiple_variables');
+    });
 });
 
 // describe('Media Queries', () => {

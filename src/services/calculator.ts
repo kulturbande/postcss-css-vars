@@ -1,28 +1,27 @@
 import { VariableInterface } from '../types/variable.interface';
-import { Root, Declaration, Rule, rule } from 'postcss';
-import { CalculatorResultInterface } from '../types/calculatorResult.interface';
+import { Declaration, Rule } from 'postcss';
+import { InstructionInterface } from '../types/instruction.interface';
+import { Instruction } from '../types/instruction';
+import { GlobalVariablesInterface } from '../types/globalVariables.interface';
+import { GlobalVariables } from '../types/globalVariables';
 
 export class Calculator {
-    private globalVariables: { [name: string]: string } = {};
-    private result: CalculatorResultInterface;
+    private globalVariables: GlobalVariablesInterface;
+    private instruction: InstructionInterface;
 
-    constructor(private variables: VariableInterface[]) {
-        this.result = {
-            cleanUpDeclarations: [],
-            replaceDeclarations: [],
-            rulesToCreate: [],
-        };
-    }
+    constructor(private variables: VariableInterface[]) {}
 
-    public calculateRulePermutations(): CalculatorResultInterface {
+    public calculateRulePermutations(): InstructionInterface {
+        this.globalVariables = new GlobalVariables();
+        this.instruction = new Instruction(this.globalVariables);
         this.variables.forEach((variable: VariableInterface) => {
             this.compareDeclarationsOfVariable(variable);
         });
 
-        return this.result;
+        return this.instruction;
     }
 
-    private compareDeclarationsOfVariable(variable: VariableInterface) {
+    private compareDeclarationsOfVariable(variable: VariableInterface): void {
         variable.getSetterDeclarations().forEach((setterDeclaration: Declaration) => {
             variable.getGetterDeclarations().forEach((getterDeclaration: Declaration) => {
                 this.compareDeclarations(variable, setterDeclaration, getterDeclaration);
@@ -34,51 +33,39 @@ export class Calculator {
         variable: VariableInterface,
         setterDeclaration: Declaration,
         getterDeclaration: Declaration
-    ) {
+    ): void {
         const setterRule = this.getParentRule(setterDeclaration);
         const getterRule = this.getParentRule(getterDeclaration);
         const isRootLevelDeclaration = setterRule?.selector === ':root' || setterRule?.selector === 'body';
 
         // the same rule
         if (setterRule === getterRule) {
-            this.replaceDeclaration(getterDeclaration, variable.name, setterDeclaration.value);
-            this.removeDeclartaion(setterDeclaration);
+            this.instruction.changeDeclaration(getterDeclaration, variable.name, setterDeclaration.value);
+            this.instruction.removeDeclaration(setterDeclaration);
             return;
         }
 
         if (isRootLevelDeclaration) {
-            this.globalVariables[variable.name] = setterDeclaration.value;
-            this.removeDeclartaion(setterDeclaration);
+            this.globalVariables.add(variable.name, setterDeclaration.value);
+            this.instruction.removeDeclaration(setterDeclaration);
         } else {
-            this.createRule(getterDeclaration, setterRule.selector, setterDeclaration);
-            this.removeDeclartaion(setterDeclaration);
+            this.instruction.addRule(
+                getterDeclaration,
+                setterRule.selector,
+                setterDeclaration.prop,
+                setterDeclaration.value
+            );
+            this.instruction.removeDeclaration(setterDeclaration);
         }
 
         // use a globale variable if it is set
-        if (typeof this.globalVariables[variable.name] !== 'undefined') {
-            this.replaceDeclaration(getterDeclaration, variable.name, this.globalVariables[variable.name]);
+        if (this.globalVariables.isAvailable(variable.name)) {
+            this.instruction.changeDeclaration(
+                getterDeclaration,
+                variable.name,
+                this.globalVariables.get(variable.name)
+            );
         }
-    }
-
-    private removeDeclartaion(declaration: Declaration) {
-        if (this.result.cleanUpDeclarations.indexOf(declaration) === -1) {
-            this.result.cleanUpDeclarations.push(declaration);
-        }
-    }
-
-    private replaceDeclaration(getterDeclaration: Declaration, variable: string, value: string) {
-        const replacedWith = new RegExp('var\\(' + variable + '\\)');
-        this.result.replaceDeclarations.push({
-            declaration: getterDeclaration,
-            valueToReplace: getterDeclaration.value.replace(replacedWith, value),
-        });
-    }
-
-    private createRule(toCopyDeclaration: Declaration, setterSelector: string, setterDeclaration: Declaration) {
-        const newRule = toCopyDeclaration.parent.clone() as Rule;
-        newRule.selector = setterSelector + ' ' + newRule.selector;
-        newRule.replaceValues(new RegExp('var\\(' + setterDeclaration.prop + '\\)'), setterDeclaration.value);
-        this.result.rulesToCreate.push(newRule);
     }
 
     private getParentRule(declaration: Declaration): Rule | null {

@@ -1,31 +1,31 @@
-import { CalculatorResultInterface } from '../types/calculatorResult.interface';
 import { Root, Declaration, Rule } from 'postcss';
+import { InstructionInterface } from '../types/instruction.interface';
 
 export class Normalizer {
-    constructor(private root: Root, private calculatorResult: CalculatorResultInterface) {}
+    constructor(private root: Root, private instruction: InstructionInterface) {}
 
     public normalize() {
-        this.cleanupDeclarations();
-        this.replaceDeclarations();
         this.createRules();
+        this.replaceDeclarations();
+        this.cleanupDeclarations();
     }
 
     private createRules() {
-        this.calculatorResult.rulesToCreate.forEach((rule: Rule) => {
+        this.instruction.getRulesToCreate().forEach((rule: Rule) => {
             this.root.append(rule);
         });
     }
 
     private replaceDeclarations() {
-        this.calculatorResult.replaceDeclarations.forEach(
-            (value: { declaration: Declaration; valueToReplace: string }) => {
+        this.instruction
+            .getDeclarationsToChange()
+            .forEach((value: { declaration: Declaration; valueToReplace: string }) => {
                 value.declaration.value = value.valueToReplace;
-            }
-        );
+            });
     }
 
     private cleanupDeclarations(): void {
-        this.calculatorResult.cleanUpDeclarations.forEach((declaration: Declaration) => {
+        this.instruction.getDeclarationsToRemove().forEach((declaration: Declaration) => {
             if (declaration.parent) {
                 if (declaration.parent.nodes.length === 1) {
                     declaration.parent.remove(); // remove the rule, if only one declaration is left

@@ -1,0 +1,17 @@
+body {
+    --color: pink;
+    --font-weight123: 700;
+}
+
+.orange {
+    --color: orange;
+}
+
+.fine {
+    --font-weight123: 400;
+}
+
+.foo {
+    color: var(--color);
+    font-weight: var(--font-weight123);
+}
