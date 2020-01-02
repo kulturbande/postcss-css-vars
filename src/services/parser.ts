@@ -1,6 +1,6 @@
 import { Root, ChildNode, Declaration, Rule } from 'postcss';
-import { VariableInterface } from '../types/variable.interface';
-import { Variable } from '../types/variable';
+import { VariableInterface } from '../entities/interfaces/variable.interface';
+import { Variable } from '../entities/variable';
 
 export class Parser {
     private variables: { [name: string]: VariableInterface } = {};

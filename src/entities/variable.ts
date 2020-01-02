@@ -1,4 +1,4 @@
-import { VariableInterface } from './variable.interface';
+import { VariableInterface } from './interfaces/variable.interface';
 import { Declaration } from 'postcss';
 
 export class Variable implements VariableInterface {

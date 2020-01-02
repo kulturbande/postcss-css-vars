@@ -1,10 +1,10 @@
-import { VariableInterface } from '../types/variable.interface';
+import { VariableInterface } from '../entities/interfaces/variable.interface';
 import { Declaration, Rule, AtRule } from 'postcss';
-import { InstructionInterface } from '../types/instruction.interface';
-import { Instruction } from '../types/instruction';
-import { GlobalVariablesInterface } from '../types/globalVariables.interface';
-import { GlobalVariables } from '../types/globalVariables';
-import { RuleDefinationInterface } from '../types/ruleDefinition.interface';
+import { InstructionInterface } from '../entities/interfaces/instruction.interface';
+import { Instruction } from '../entities/instruction';
+import { GlobalVariablesInterface } from '../entities/interfaces/globalVariables.interface';
+import { GlobalVariables } from '../entities/globalVariables';
+import { RuleDefinationInterface } from '../entities/interfaces/ruleDefinition.interface';
 
 export class Calculator {
     private globalVariables: GlobalVariablesInterface;

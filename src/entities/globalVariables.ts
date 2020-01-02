@@ -1,4 +1,4 @@
-import { GlobalVariablesInterface } from './globalVariables.interface';
+import { GlobalVariablesInterface } from './interfaces/globalVariables.interface';
 
 export class GlobalVariables implements GlobalVariablesInterface {
     private globalVariables: { [level: string]: { [name: string]: { variable: string; value: string } } } = {};

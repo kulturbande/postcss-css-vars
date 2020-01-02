@@ -1,8 +1,8 @@
-import { InstructionInterface } from './instruction.interface';
-import { GlobalVariablesInterface } from './globalVariables.interface';
+import { InstructionInterface } from './interfaces/instruction.interface';
+import { GlobalVariablesInterface } from './interfaces/globalVariables.interface';
 import { Declaration, Rule } from 'postcss';
-import { RuleDefinationInterface } from './ruleDefinition.interface';
-import { RuleCreationInterface } from './ruleCreation.interface';
+import { RuleDefinationInterface } from './interfaces/ruleDefinition.interface';
+import { RuleCreationInterface } from './interfaces/ruleCreation.interface';
 
 export class Instruction implements InstructionInterface {
     private cleanUpDeclarations: Declaration[] = [];
