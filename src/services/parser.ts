@@ -20,10 +20,22 @@ export class Parser {
     private parseRoot(root: Root) {
         root.each((node: ChildNode, index: number) => {
             if (node.type === 'rule') {
-                node.each((declationion: Declaration) => {
-                    this.parseDeclaration(declationion, node);
+                this.parseRule(node);
+            } else if (node.type === 'atrule') {
+                node.nodes.forEach((node: ChildNode) => {
+                    this.parseRule(node as Rule);
                 });
             }
+        });
+    }
+
+    /**
+     * parse the rule and find the usage of variables
+     * @param rule the rule to parse
+     */
+    private parseRule(rule: Rule) {
+        rule.each((declationion: Declaration) => {
+            this.parseDeclaration(declationion, rule);
         });
     }
 

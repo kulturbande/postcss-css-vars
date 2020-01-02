@@ -1,23 +1,41 @@
 import { GlobalVariablesInterface } from './globalVariables.interface';
 
 export class GlobalVariables implements GlobalVariablesInterface {
-    private globalVariables: { [name: string]: { variable: string; value: string } } = {};
+    private globalVariables: { [level: string]: { [name: string]: { variable: string; value: string } } } = {};
 
-    add(variable: string, value: string): void {
-        this.globalVariables[variable] = { variable, value };
+    constructor() {
+        this.globalVariables['root'] = {};
     }
 
-    get(variable: string): string | null {
-        if (this.isAvailable(variable)) {
-            return this.globalVariables[variable].value;
+    add(variable: string, value: string, level?: string): void {
+        this.getVariablesForLevel(level)[variable] = { variable, value };
+    }
+
+    get(variable: string, level?: string): string | null {
+        if (this.isAvailable(variable, level)) {
+            return this.getVariablesForLevel(level)[variable].value;
         }
     }
 
-    all(): { variable: string; value: string }[] {
-        return Object.values(this.globalVariables);
+    all(level?: string): { variable: string; value: string }[] {
+        let allVariables = this.getVariablesForLevel();
+        if (level) {
+            allVariables = { ...this.getVariablesForLevel(level), ...allVariables };
+        }
+        return Object.values(allVariables);
     }
 
-    isAvailable(variable: string): boolean {
-        return typeof this.globalVariables[variable] !== 'undefined';
+    isAvailable(variable: string, level: string = 'root'): boolean {
+        return typeof this.getVariablesForLevel(level)[variable] !== 'undefined';
+    }
+
+    private getVariablesForLevel(level?: string) {
+        if (level) {
+            if (typeof this.globalVariables[level] === 'undefined') {
+                this.globalVariables[level] = {};
+            }
+            return this.globalVariables[level];
+        }
+        return this.globalVariables['root'];
     }
 }

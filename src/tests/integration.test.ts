@@ -34,8 +34,8 @@ describe('Permutation', () => {
     });
 });
 
-// describe('Media Queries', () => {
-//     it('should support media queries', async () => {
-//         await testFixture('permutation/class');
-//     });
-// });
+describe('Media Queries', () => {
+    it('should support media queries', async () => {
+        await testFixture('media_queries/simple');
+    });
+});
