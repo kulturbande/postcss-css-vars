@@ -4,3 +4,4 @@ yarn.lock
 *.test.js
 .travis.yml
 .prettierrc
+tsconfig.json
