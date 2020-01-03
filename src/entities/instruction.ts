@@ -1,7 +1,7 @@
 import { InstructionInterface } from './interfaces/instruction.interface';
 import { GlobalVariablesInterface } from './interfaces/globalVariables.interface';
 import { Declaration, Rule } from 'postcss';
-import { RuleDefinationInterface } from './interfaces/ruleDefinition.interface';
+import { RuleDefinitionInterface } from './interfaces/ruleDefinition.interface';
 import { RuleCreationInterface } from './interfaces/ruleCreation.interface';
 
 export class Instruction implements InstructionInterface {
@@ -10,12 +10,12 @@ export class Instruction implements InstructionInterface {
         declaration: Declaration;
         valueToReplace: string;
     }[] = [];
-    rulesToCreate: RuleDefinationInterface[] = [];
+    rulesToCreate: RuleDefinitionInterface[] = [];
 
     constructor(private globalVariables: GlobalVariablesInterface) {}
 
     /**
-     * mark a declarition to remove
+     * mark a declaration to remove
      * @param declaration declaration to remove
      */
     public removeDeclaration(declaration: Declaration): InstructionInterface {
@@ -42,10 +42,10 @@ export class Instruction implements InstructionInterface {
      * @param toCopyDeclaration rule that should be copied
      * @param prefixSelector the selector that should be added to the rule
      * @param variable variable name
-     * @param value varaible value
+     * @param value variable value
      */
-    public addRule(ruleDefination: RuleDefinationInterface): InstructionInterface {
-        this.rulesToCreate.push(ruleDefination);
+    public addRule(ruleDefinition: RuleDefinitionInterface): InstructionInterface {
+        this.rulesToCreate.push(ruleDefinition);
         return this;
     }
 
@@ -71,29 +71,29 @@ export class Instruction implements InstructionInterface {
      */
     public getRulesToCreate(): RuleCreationInterface[] {
         const rules: RuleCreationInterface[] = [];
-        this.rulesToCreate.forEach((ruleDefination: RuleDefinationInterface) => {
-            rules.push({ rule: this.getNewRule(ruleDefination), container: ruleDefination.container });
+        this.rulesToCreate.forEach((ruleDefinition: RuleDefinitionInterface) => {
+            rules.push({ rule: this.getNewRule(ruleDefinition), container: ruleDefinition.container });
         });
         return rules;
     }
 
     /**
      * get the calculated rule
-     * @param ruleDefination values of the new rule
+     * @param ruleDefinition values of the new rule
      */
-    private getNewRule(ruleDefination: RuleDefinationInterface): Rule {
-        let newRule = ruleDefination.ruleOrigin.clone();
+    private getNewRule(ruleDefinition: RuleDefinitionInterface): Rule {
+        let newRule = ruleDefinition.ruleOrigin.clone();
 
-        if (ruleDefination.prefixSelector) {
-            newRule.selector = ruleDefination.prefixSelector + ' ' + newRule.selector;
+        if (ruleDefinition.prefixSelector) {
+            newRule.selector = ruleDefinition.prefixSelector + ' ' + newRule.selector;
         }
 
         this.globalVariables.all().forEach(({ variable, value }) => {
-            if (variable !== ruleDefination.variable) {
+            if (variable !== ruleDefinition.variable) {
                 newRule.replaceValues(new RegExp('var\\(' + variable + '\\)'), value);
             }
         });
-        newRule.replaceValues(new RegExp('var\\(' + ruleDefination.variable + '\\)'), ruleDefination.value);
+        newRule.replaceValues(new RegExp('var\\(' + ruleDefinition.variable + '\\)'), ruleDefinition.value);
 
         return newRule;
     }

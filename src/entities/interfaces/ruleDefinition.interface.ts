@@ -1,6 +1,6 @@
 import { Rule, Root, AtRule } from 'postcss';
 
-export interface RuleDefinationInterface {
+export interface RuleDefinitionInterface {
     ruleOrigin: Rule;
     container?: Root | AtRule;
     prefixSelector?: string;

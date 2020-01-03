@@ -4,7 +4,7 @@ import { InstructionInterface } from '../entities/interfaces/instruction.interfa
 import { Instruction } from '../entities/instruction';
 import { GlobalVariablesInterface } from '../entities/interfaces/globalVariables.interface';
 import { GlobalVariables } from '../entities/globalVariables';
-import { RuleDefinationInterface } from '../entities/interfaces/ruleDefinition.interface';
+import { RuleDefinitionInterface } from '../entities/interfaces/ruleDefinition.interface';
 
 export class Calculator {
     private globalVariables: GlobalVariablesInterface;
@@ -53,7 +53,7 @@ export class Calculator {
             this.globalVariables.add(variable.name, setterDeclaration.value);
         } else if (this.isRootLevelDeclaration(setterRule, 'atrule')) {
             const atRule = setterRule.parent as AtRule;
-            const rule: RuleDefinationInterface = {
+            const rule: RuleDefinitionInterface = {
                 ruleOrigin: getterRule,
                 variable: setterDeclaration.prop,
                 value: setterDeclaration.value,
@@ -63,7 +63,7 @@ export class Calculator {
             this.globalVariables.add(variable.name, setterDeclaration.value, atRule.params);
             this.instruction.addRule(rule);
         } else {
-            const rule: RuleDefinationInterface = {
+            const rule: RuleDefinitionInterface = {
                 ruleOrigin: getterRule,
                 prefixSelector: setterRule.selector,
                 variable: setterDeclaration.prop,
@@ -75,7 +75,7 @@ export class Calculator {
 
         this.instruction.removeDeclaration(setterDeclaration);
 
-        // use a globale variable if it is set
+        // use a global variable if it is set
         if (this.globalVariables.isAvailable(variable.name)) {
             const value = this.globalVariables.get(variable.name);
             if (value) {
