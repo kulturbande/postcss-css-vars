@@ -66,7 +66,7 @@
 }
 ```
 
-### Permuations
+### Permutations
 
 ```css
 :host {
