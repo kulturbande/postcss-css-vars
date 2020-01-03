@@ -2,19 +2,91 @@
 
 [![Build Status](https://travis-ci.com/kulturbande/postcss-css-variables.svg?branch=master)](https://travis-ci.com/kulturbande/postcss-css-variables)
 
-[PostCSS] plugin for CSS Custom Properties. This repository is currentyly in development and will be used to support older browser, that are not Custom Properties - enabled.
+[PostCSS] plugin for CSS Custom Properties. The purpose is mainly to write more modern CSS code if you need to support older browsers like the Internet Explorer 11.
 
 [postcss]: https://github.com/postcss/postcss
 
-```css
-.foo {
-    /* Input example */
-}
-```
+## Examples
+
+### Direct usage
 
 ```css
 .foo {
-    /* Output example */
+    --color: red;
+    color: var(--color);
+    border: 1px solid var(-color);
+}
+/* becomes */
+.foo {
+    color: red;
+    border: 1px solid red;
+}
+```
+
+### Host/Body - usage
+
+```css
+:host {
+    --color: red;
+}
+.foo {
+    color: var(--color);
+    border: 1px solid var(-color);
+}
+/* becomes */
+.foo {
+    color: red;
+    border: 1px solid red;
+}
+```
+
+### Media Queries
+
+```css
+:host {
+    --color: red;
+}
+.foo {
+    color: var(--color);
+    border: 1px solid var(-color);
+}
+@media (min-width: 30em) {
+    --color: orange;
+}
+/* becomes */
+.foo {
+    color: red;
+    border: 1px solid red;
+}
+@media (min-width: 30em) {
+    .foo {
+        color: orange;
+        border: 1px solid orange;
+    }
+}
+```
+
+### Permuations
+
+```css
+:host {
+    --color: red;
+}
+.foo {
+    color: var(--color);
+    border: 1px solid var(-color);
+}
+.orange {
+    --color: orange;
+}
+/* becomes */
+.foo {
+    color: red;
+    border: 1px solid red;
+}
+.orange .foo {
+    color: orange;
+    border: 1px solid orange;
 }
 ```
 
