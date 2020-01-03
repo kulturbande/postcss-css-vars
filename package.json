@@ -1,5 +1,5 @@
 {
-    "name": "postcss-css-variables",
+    "name": "postcss-css-vars",
     "version": "0.0.1",
     "description": "PostCSS plugin for CSS Custom Properties",
     "keywords": [

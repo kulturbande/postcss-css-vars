@@ -92,6 +92,12 @@
 
 ## Usage
 
+Install the package:
+
+```bash
+$ yarn add postcss-css-vars --save
+```
+
 Check you project for existed PostCSS config: `postcss.config.js`
 in the project root, `"postcss"` section in `package.json`
 or `postcss` in bundle config.
@@ -101,7 +107,7 @@ If you already use PostCSS, add the plugin to plugins list:
 ```diff
 module.exports = {
   plugins: [
-+   require('postcss-css-variables'),
++   require('postcss-css-vars'),
     require('autoprefixer')
   ]
 }
