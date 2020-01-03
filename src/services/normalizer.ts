@@ -33,7 +33,7 @@ export class Normalizer {
     private cleanupDeclarations(): void {
         this.instruction.getDeclarationsToRemove().forEach((declaration: Declaration) => {
             if (declaration.parent) {
-                if (declaration.parent.nodes.length === 1) {
+                if (declaration.parent.nodes?.length === 1) {
                     declaration.parent.remove(); // remove the rule, if only one declaration is left
                 } else {
                     declaration.remove();

@@ -15,6 +15,7 @@ export class GlobalVariables implements GlobalVariablesInterface {
         if (this.isAvailable(variable, level)) {
             return this.getVariablesForLevel(level)[variable].value;
         }
+        return null;
     }
 
     all(level?: string): { variable: string; value: string }[] {

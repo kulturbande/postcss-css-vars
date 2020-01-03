@@ -22,7 +22,7 @@ export class Parser {
             if (node.type === 'rule') {
                 this.parseRule(node);
             } else if (node.type === 'atrule') {
-                node.nodes.forEach((node: ChildNode) => {
+                node.nodes?.forEach((node: ChildNode) => {
                     this.parseRule(node as Rule);
                 });
             }
@@ -34,7 +34,7 @@ export class Parser {
      * @param rule the rule to parse
      */
     private parseRule(rule: Rule) {
-        rule.each((declationion: Declaration) => {
+        rule.walkDecls((declationion: Declaration) => {
             this.parseDeclaration(declationion, rule);
         });
     }

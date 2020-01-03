@@ -10,7 +10,10 @@ export class Calculator {
     private globalVariables: GlobalVariablesInterface;
     private instruction: InstructionInterface;
 
-    constructor(private variables: VariableInterface[]) {}
+    constructor(private variables: VariableInterface[]) {
+        this.globalVariables = new GlobalVariables();
+        this.instruction = new Instruction(this.globalVariables);
+    }
 
     public calculateRulePermutations(): InstructionInterface {
         this.globalVariables = new GlobalVariables();
@@ -74,11 +77,10 @@ export class Calculator {
 
         // use a globale variable if it is set
         if (this.globalVariables.isAvailable(variable.name)) {
-            this.instruction.changeDeclaration(
-                getterDeclaration,
-                variable.name,
-                this.globalVariables.get(variable.name)
-            );
+            const value = this.globalVariables.get(variable.name);
+            if (value) {
+                this.instruction.changeDeclaration(getterDeclaration, variable.name, value);
+            }
         }
     }
 
@@ -98,10 +100,10 @@ export class Calculator {
      * get current rule
      * @param declaration get the rule from the given declaration
      */
-    private getParentRule(declaration: Declaration): Rule | null {
+    private getParentRule(declaration: Declaration): Rule {
         if (declaration.parent?.type === 'rule') {
             return declaration.parent;
         }
-        return null;
+        throw new Error("Can't find parent for " + declaration.toString());
     }
 }
