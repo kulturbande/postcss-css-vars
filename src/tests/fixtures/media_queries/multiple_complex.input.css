@@ -1,0 +1,34 @@
+:root {
+    --font-size: 3em;
+    --color: red;
+}
+
+.foo {
+    font-size: var(--font-size);
+}
+
+.fooBar {
+    font-size: var(--font-size);
+    color: var(--color);
+}
+
+@media (min-width: 30em) and (orientation: landscape) {
+    body {
+        --font-size: 2em;
+    }
+
+    .bar {
+        color: var(--color);
+    }
+}
+
+@media (max-width: 70em) {
+    body {
+        --font-size: 4em;
+        --color: pink;
+    }
+
+    .bar {
+        color: var(--color);
+    }
+}

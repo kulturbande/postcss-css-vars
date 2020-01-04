@@ -1,0 +1,18 @@
+.foo {
+    font-size: 3em;
+    color: red;
+}
+
+@media (min-width: 30em) and (orientation: landscape) {
+    .foo {
+        font-size: 2em;
+        color: red;
+    }
+}
+
+@media (max-width: 70em) {
+    .foo {
+        font-size: 3em;
+        color: pink;
+    }
+}

@@ -1,0 +1,27 @@
+:root {
+    --font-size: 3em;
+    --color: red;
+}
+
+.foo {
+    font-size: var(--font-size);
+    color: var(--color);
+}
+
+.bar {
+    font-size: var(--font-size);
+}
+
+.fooBar {
+    color: orange;
+}
+
+a > span {
+    color: var(--color);
+}
+
+@media (max-width: 70em) {
+    body {
+        --color: pink;
+    }
+}
