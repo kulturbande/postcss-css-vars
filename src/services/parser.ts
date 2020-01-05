@@ -1,15 +1,14 @@
-import { Root, ChildNode, Declaration, Rule } from 'postcss';
+import { Root, Declaration, Rule } from 'postcss';
 import { VariableInterface } from '../entities/interfaces/variable.interface';
 import { Variable } from '../entities/variable';
 
 export class Parser {
     private variables: { [name: string]: VariableInterface } = {};
 
-    constructor(root: Root) {
-        this.parseRoot(root);
-    }
+    constructor(private root: Root) {}
 
     public getVariables(): VariableInterface[] {
+        this.parseRoot(this.root);
         return Object.values(this.variables);
     }
 
@@ -18,33 +17,17 @@ export class Parser {
      * @param root
      */
     private parseRoot(root: Root) {
-        root.each((node: ChildNode, index: number) => {
-            if (node.type === 'rule') {
-                this.parseRule(node);
-            } else if (node.type === 'atrule') {
-                node.nodes?.forEach((node: ChildNode) => {
-                    this.parseRule(node as Rule);
-                });
-            }
+        root.walkDecls((declaration: Declaration) => {
+            this.parseDeclaration(declaration);
         });
     }
 
     /**
-     * parse the rule and find the usage of variables
-     * @param rule the rule to parse
-     */
-    private parseRule(rule: Rule) {
-        rule.walkDecls((declationion: Declaration) => {
-            this.parseDeclaration(declationion, rule);
-        });
-    }
-
-    /**
-     * Parse a declation of each rule to setup a collection of variables
+     * Parse a declaration of each rule to setup a collection of variables
      * @param declaration
      * @param rule
      */
-    private parseDeclaration(declaration: Declaration, rule: Rule) {
+    private parseDeclaration(declaration: Declaration) {
         const setter = declaration.prop.match(/^(--[\w|\-]+)/);
         const getter = declaration.value.match(/var\((--[\w|\-]+)\)/);
 

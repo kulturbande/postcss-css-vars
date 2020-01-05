@@ -3,14 +3,12 @@ import { GlobalVariablesInterface } from './interfaces/globalVariables.interface
 import { Declaration, Rule } from 'postcss';
 import { RuleDefinitionInterface } from './interfaces/ruleDefinition.interface';
 import { RuleCreationInterface } from './interfaces/ruleCreation.interface';
+import { DeclarationReplaceInterface } from './interfaces/declarationReplace.interface';
 
 export class Instruction implements InstructionInterface {
     private cleanUpDeclarations: Declaration[] = [];
-    private replaceDeclarations: {
-        declaration: Declaration;
-        valueToReplace: string;
-    }[] = [];
-    rulesToCreate: RuleDefinitionInterface[] = [];
+    private replaceDeclarations: DeclarationReplaceInterface[] = [];
+    rulesToCreate: { [hash: string]: RuleDefinitionInterface } = {};
 
     constructor(private globalVariables: GlobalVariablesInterface) {}
 
@@ -45,7 +43,13 @@ export class Instruction implements InstructionInterface {
      * @param value variable value
      */
     public addRule(ruleDefinition: RuleDefinitionInterface): InstructionInterface {
-        this.rulesToCreate.push(ruleDefinition);
+        let hash: string = ruleDefinition.ruleOrigin.selector;
+        if (ruleDefinition.container && ruleDefinition.container.type === 'atrule') {
+            hash += '_' + ruleDefinition.container.params;
+        }
+        if (typeof this.rulesToCreate[hash] === 'undefined') {
+            this.rulesToCreate[hash] = ruleDefinition;
+        }
         return this;
     }
 
@@ -59,10 +63,7 @@ export class Instruction implements InstructionInterface {
     /**
      * get declarations and and their new values that should be changed
      */
-    public getDeclarationsToChange(): {
-        declaration: Declaration;
-        valueToReplace: string;
-    }[] {
+    public getDeclarationsToChange(): DeclarationReplaceInterface[] {
         return this.replaceDeclarations;
     }
 
@@ -71,7 +72,7 @@ export class Instruction implements InstructionInterface {
      */
     public getRulesToCreate(): RuleCreationInterface[] {
         const rules: RuleCreationInterface[] = [];
-        this.rulesToCreate.forEach((ruleDefinition: RuleDefinitionInterface) => {
+        Object.values(this.rulesToCreate).forEach((ruleDefinition: RuleDefinitionInterface) => {
             rules.push({ rule: this.getNewRule(ruleDefinition), container: ruleDefinition.container });
         });
         return rules;

@@ -39,8 +39,12 @@ export class Calculator {
         setterDeclaration: Declaration,
         getterDeclaration: Declaration
     ): void {
-        const setterRule = this.getParentRule(setterDeclaration);
-        const getterRule = this.getParentRule(getterDeclaration);
+        const setterRule = this.getRule(setterDeclaration);
+        const getterRule = this.getRule(getterDeclaration);
+        const setterAtRule = this.getAtRule(setterRule);
+        const getterAtRule = this.getAtRule(getterRule);
+
+        const isRootLevelSetterDeclaration = setterRule.selector === ':root' || setterRule.selector === 'body';
 
         // the same rule
         if (setterRule === getterRule) {
@@ -49,20 +53,25 @@ export class Calculator {
             return;
         }
 
-        if (this.isRootLevelDeclaration(setterRule, 'root')) {
-            this.globalVariables.add(variable.name, setterDeclaration.value);
-        } else if (this.isRootLevelDeclaration(setterRule, 'atrule')) {
-            const atRule = setterRule.parent as AtRule;
-            const rule: RuleDefinitionInterface = {
-                ruleOrigin: getterRule,
-                variable: setterDeclaration.prop,
-                value: setterDeclaration.value,
-                container: atRule,
-            };
+        if (isRootLevelSetterDeclaration) {
+            // on root - level
+            if (setterAtRule === null) {
+                // only store the variables
+                this.globalVariables.add(variable.name, setterDeclaration.value);
+            } else if (getterAtRule === null) {
+                // getter is on root level and needs to create a child in the given media query
+                const rule: RuleDefinitionInterface = {
+                    ruleOrigin: getterRule,
+                    variable: setterDeclaration.prop,
+                    value: setterDeclaration.value,
+                    container: setterAtRule,
+                };
 
-            this.globalVariables.add(variable.name, setterDeclaration.value, atRule.params);
-            this.instruction.addRule(rule);
+                this.globalVariables.add(variable.name, setterDeclaration.value, setterAtRule.params);
+                this.instruction.addRule(rule);
+            }
         } else {
+            // the setter has an own rule
             const rule: RuleDefinitionInterface = {
                 ruleOrigin: getterRule,
                 prefixSelector: setterRule.selector,
@@ -73,37 +82,51 @@ export class Calculator {
             this.instruction.addRule(rule);
         }
 
+        // remove the setter
         this.instruction.removeDeclaration(setterDeclaration);
 
-        // use a global variable if it is set
-        if (this.globalVariables.isAvailable(variable.name)) {
-            const value = this.globalVariables.get(variable.name);
-            if (value) {
-                this.instruction.changeDeclaration(getterDeclaration, variable.name, value);
-            }
+        // add global variables to getter declarations
+        let wasReplaced = false;
+        if (getterAtRule) {
+            wasReplaced = this.replaceWithGlobalVariable(getterDeclaration, variable.name, getterAtRule.params);
+        }
+        if (!wasReplaced) {
+            this.replaceWithGlobalVariable(getterDeclaration, variable.name);
         }
     }
 
     /**
-     * find out if this is a root/atrule - level declaration
-     * @param rule setter rule which should be parsed
-     * @param type root or atrule - type
+     * replace with global variable
+     * @param getterDeclaration getter declaration that should be replaced
+     * @param variableName name of the replaced variable
+     * @param level media query level
      */
-    private isRootLevelDeclaration(rule: Rule, type: string): boolean {
-        if (rule?.parent?.type !== type) {
-            return false;
+    private replaceWithGlobalVariable(getterDeclaration: Declaration, variableName: string, level?: string): boolean {
+        if (this.globalVariables.isAvailable(variableName, level)) {
+            const value = this.globalVariables.get(variableName, level);
+            if (value) {
+                this.instruction.changeDeclaration(getterDeclaration, variableName, value);
+                return true;
+            }
         }
-        return rule?.selector === ':root' || rule?.selector === 'body';
+        return false;
     }
 
     /**
      * get current rule
      * @param declaration get the rule from the given declaration
      */
-    private getParentRule(declaration: Declaration): Rule {
+    private getRule(declaration: Declaration): Rule {
         if (declaration.parent?.type === 'rule') {
             return declaration.parent;
         }
         throw new Error("Can't find parent for " + declaration.toString());
+    }
+
+    private getAtRule(rule: Rule): AtRule | null {
+        if (rule.parent.type === 'atrule') {
+            return rule.parent;
+        }
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 import { Declaration } from 'postcss';
 import { RuleDefinitionInterface } from './ruleDefinition.interface';
 import { RuleCreationInterface } from './ruleCreation.interface';
+import { DeclarationReplaceInterface } from './declarationReplace.interface';
 
 export interface InstructionInterface {
     removeDeclaration(declaration: Declaration): InstructionInterface;
@@ -8,9 +9,6 @@ export interface InstructionInterface {
     addRule(ruleDefinition: RuleDefinitionInterface): InstructionInterface;
 
     getDeclarationsToRemove(): Declaration[];
-    getDeclarationsToChange(): {
-        declaration: Declaration;
-        valueToReplace: string;
-    }[];
+    getDeclarationsToChange(): DeclarationReplaceInterface[];
     getRulesToCreate(): RuleCreationInterface[];
 }
