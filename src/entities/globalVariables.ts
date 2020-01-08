@@ -1,42 +1,48 @@
 import { GlobalVariablesInterface } from './interfaces/globalVariables.interface';
+import { Container, Rule } from 'postcss';
+import { VariableEntryInterface } from './interfaces/variableEntry.interface';
 
+interface VariableContainerEntry {
+    container: Container;
+    variables: { [name: string]: VariableEntryInterface };
+}
 export class GlobalVariables implements GlobalVariablesInterface {
-    private globalVariables: { [level: string]: { [name: string]: { variable: string; value: string } } } = {};
+    private globalVariables: VariableContainerEntry[] = [];
 
-    constructor() {
-        this.globalVariables['root'] = {};
+    add(name: string, value: string, rule: Rule): void {
+        this.getVariablesForLevel(rule.parent).variables[name] = { name, value };
     }
 
-    add(variable: string, value: string, level?: string): void {
-        this.getVariablesForLevel(level)[variable] = { variable, value };
-    }
-
-    get(variable: string, level?: string): string | null {
-        if (this.isAvailable(variable, level)) {
-            return this.getVariablesForLevel(level)[variable].value;
+    get(variable: string, rule: Rule): string | null {
+        if (typeof this.getVariableEntry(variable, rule.parent) !== 'undefined') {
+            return this.getVariableEntry(variable, rule.parent).value;
+        } else if (typeof this.getVariableEntry(variable, rule.parent?.parent as Container) !== 'undefined') {
+            return this.getVariableEntry(variable, rule.parent?.parent as Container).value;
         }
         return null;
     }
 
-    all(level?: string): { variable: string; value: string }[] {
-        let allVariables = this.getVariablesForLevel();
-        if (level) {
-            allVariables = { ...this.getVariablesForLevel(level), ...allVariables };
+    all(rule: Rule): VariableEntryInterface[] {
+        let allVariables = this.getVariablesForLevel(rule.parent).variables;
+        if (rule.parent.type === 'atrule') {
+            allVariables = { ...this.getVariablesForLevel(rule.parent.parent).variables, ...allVariables };
         }
         return Object.values(allVariables);
     }
 
-    isAvailable(variable: string, level: string = 'root'): boolean {
-        return typeof this.getVariablesForLevel(level)[variable] !== 'undefined';
+    private getVariableEntry(variable: string, container: Container): VariableEntryInterface {
+        return this.getVariablesForLevel(container).variables[variable];
     }
 
-    private getVariablesForLevel(level?: string) {
-        if (level) {
-            if (typeof this.globalVariables[level] === 'undefined') {
-                this.globalVariables[level] = {};
-            }
-            return this.globalVariables[level];
+    private getVariablesForLevel(container: Container): VariableContainerEntry {
+        let containerEntry: VariableContainerEntry | undefined = this.globalVariables.find(
+            (entry: VariableContainerEntry) => entry.container === container
+        );
+
+        if (typeof containerEntry === 'undefined') {
+            containerEntry = { container, variables: {} };
+            this.globalVariables.push(containerEntry);
         }
-        return this.globalVariables['root'];
+        return containerEntry;
     }
 }

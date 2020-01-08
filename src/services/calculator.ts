@@ -1,5 +1,5 @@
 import { VariableInterface } from '../entities/interfaces/variable.interface';
-import { Declaration, Rule, AtRule } from 'postcss';
+import { Declaration, Rule, AtRule, Container } from 'postcss';
 import { InstructionInterface } from '../entities/interfaces/instruction.interface';
 import { Instruction } from '../entities/instruction';
 import { GlobalVariablesInterface } from '../entities/interfaces/globalVariables.interface';
@@ -55,44 +55,31 @@ export class Calculator {
 
         if (isRootLevelSetterDeclaration) {
             // on root - level
-            if (setterAtRule === null) {
-                // only store the variables
-                this.globalVariables.add(variable.name, setterDeclaration.value);
-            } else if (getterAtRule === null) {
-                // getter is on root level and needs to create a child in the given media query
-                const rule: RuleDefinitionInterface = {
+            this.globalVariables.add(variable.name, setterDeclaration.value, setterRule);
+
+            // create a new rule if the getter is on root level and the setter is in a media query
+            if (getterAtRule === null && setterAtRule) {
+                let rule: RuleDefinitionInterface = {
                     ruleOrigin: getterRule,
-                    variable: setterDeclaration.prop,
-                    value: setterDeclaration.value,
                     container: setterAtRule,
                 };
-
-                this.globalVariables.add(variable.name, setterDeclaration.value, setterAtRule.params);
-                this.instruction.addRule(rule);
+                this.instruction.addRule(rule, { name: setterDeclaration.prop, value: setterDeclaration.value });
             }
         } else {
             // the setter has an own rule
             const rule: RuleDefinitionInterface = {
                 ruleOrigin: getterRule,
                 prefixSelector: setterRule.selector,
-                variable: setterDeclaration.prop,
-                value: setterDeclaration.value,
             };
 
-            this.instruction.addRule(rule);
+            this.instruction.addRule(rule, { name: setterDeclaration.prop, value: setterDeclaration.value });
         }
 
         // remove the setter
         this.instruction.removeDeclaration(setterDeclaration);
 
         // add global variables to getter declarations
-        let wasReplaced = false;
-        if (getterAtRule) {
-            wasReplaced = this.replaceWithGlobalVariable(getterDeclaration, variable.name, getterAtRule.params);
-        }
-        if (!wasReplaced) {
-            this.replaceWithGlobalVariable(getterDeclaration, variable.name);
-        }
+        this.replaceWithGlobalVariable(getterDeclaration, variable.name);
     }
 
     /**
@@ -101,13 +88,11 @@ export class Calculator {
      * @param variableName name of the replaced variable
      * @param level media query level
      */
-    private replaceWithGlobalVariable(getterDeclaration: Declaration, variableName: string, level?: string): boolean {
-        if (this.globalVariables.isAvailable(variableName, level)) {
-            const value = this.globalVariables.get(variableName, level);
-            if (value) {
-                this.instruction.changeDeclaration(getterDeclaration, variableName, value);
-                return true;
-            }
+    private replaceWithGlobalVariable(getterDeclaration: Declaration, variableName: string): boolean {
+        const value = this.globalVariables.get(variableName, this.getRule(getterDeclaration));
+        if (value) {
+            this.instruction.changeDeclaration(getterDeclaration, variableName, value);
+            return true;
         }
         return false;
     }

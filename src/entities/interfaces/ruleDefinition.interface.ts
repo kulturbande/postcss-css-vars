@@ -4,6 +4,4 @@ export interface RuleDefinitionInterface {
     ruleOrigin: Rule;
     container?: Root | AtRule;
     prefixSelector?: string;
-    variable: string;
-    value: string;
 }

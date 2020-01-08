@@ -1,6 +1,8 @@
+import { Rule } from 'postcss';
+import { VariableEntryInterface } from './variableEntry.interface';
+
 export interface GlobalVariablesInterface {
-    add(variable: string, value: string, level?: string): void;
-    get(variable: string, level?: string): string | null;
-    all(level?: string): { variable: string; value: string }[];
-    isAvailable(variable: string, level?: string): boolean;
+    add(name: string, value: string, rule: Rule): void;
+    get(name: string, rule: Rule): string | null;
+    all(rule: Rule): VariableEntryInterface[];
 }

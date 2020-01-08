@@ -4,11 +4,17 @@ import { Declaration, Rule } from 'postcss';
 import { RuleDefinitionInterface } from './interfaces/ruleDefinition.interface';
 import { RuleCreationInterface } from './interfaces/ruleCreation.interface';
 import { DeclarationReplaceInterface } from './interfaces/declarationReplace.interface';
+import { VariableEntryInterface } from './interfaces/variableEntry.interface';
+
+interface InternalRuleDefinitionInterface {
+    definition: RuleDefinitionInterface;
+    variables: VariableEntryInterface[];
+}
 
 export class Instruction implements InstructionInterface {
     private cleanUpDeclarations: Declaration[] = [];
     private replaceDeclarations: DeclarationReplaceInterface[] = [];
-    rulesToCreate: { [hash: string]: RuleDefinitionInterface } = {};
+    private rulesToCreate: InternalRuleDefinitionInterface[] = [];
 
     constructor(private globalVariables: GlobalVariablesInterface) {}
 
@@ -42,14 +48,23 @@ export class Instruction implements InstructionInterface {
      * @param variable variable name
      * @param value variable value
      */
-    public addRule(ruleDefinition: RuleDefinitionInterface): InstructionInterface {
-        let hash: string = ruleDefinition.ruleOrigin.selector;
-        if (ruleDefinition.container && ruleDefinition.container.type === 'atrule') {
-            hash += '_' + ruleDefinition.container.params;
+    public addRule(ruleDefinition: RuleDefinitionInterface, variable: VariableEntryInterface): InstructionInterface {
+        // be aware that the comparison between the whole each entry of the object is another one, that the object itself
+        const rule = this.rulesToCreate.find(
+            (entry: InternalRuleDefinitionInterface) =>
+                entry.definition.container === ruleDefinition.container &&
+                entry.definition.prefixSelector === ruleDefinition.prefixSelector &&
+                entry.definition.ruleOrigin === ruleDefinition.ruleOrigin
+        );
+
+        // the rule was not created?
+        if (typeof rule === 'undefined') {
+            this.rulesToCreate.push({ definition: ruleDefinition, variables: [variable] });
+        } else {
+            // add the variable to the previous found rule
+            rule.variables.push(variable);
         }
-        if (typeof this.rulesToCreate[hash] === 'undefined') {
-            this.rulesToCreate[hash] = ruleDefinition;
-        }
+
         return this;
     }
 
@@ -72,29 +87,28 @@ export class Instruction implements InstructionInterface {
      */
     public getRulesToCreate(): RuleCreationInterface[] {
         const rules: RuleCreationInterface[] = [];
-        Object.values(this.rulesToCreate).forEach((ruleDefinition: RuleDefinitionInterface) => {
-            rules.push({ rule: this.getNewRule(ruleDefinition), container: ruleDefinition.container });
+        this.rulesToCreate.forEach((entry: InternalRuleDefinitionInterface) => {
+            rules.push({ rule: this.getNewRule(entry), container: entry.definition.container });
         });
         return rules;
     }
 
     /**
      * get the calculated rule
-     * @param ruleDefinition values of the new rule
+     * @param rule values of the new rule
      */
-    private getNewRule(ruleDefinition: RuleDefinitionInterface): Rule {
-        let newRule = ruleDefinition.ruleOrigin.clone();
+    private getNewRule(rule: InternalRuleDefinitionInterface): Rule {
+        let newRule = rule.definition.ruleOrigin.clone();
 
-        if (ruleDefinition.prefixSelector) {
-            newRule.selector = ruleDefinition.prefixSelector + ' ' + newRule.selector;
+        if (rule.definition.prefixSelector) {
+            newRule.selector = rule.definition.prefixSelector + ' ' + newRule.selector;
         }
 
-        this.globalVariables.all().forEach(({ variable, value }) => {
-            if (variable !== ruleDefinition.variable) {
-                newRule.replaceValues(new RegExp('var\\(' + variable + '\\)'), value);
-            }
+        const variables = [...rule.variables, ...this.globalVariables.all(rule.definition.ruleOrigin)];
+
+        variables.forEach((variable: VariableEntryInterface) => {
+            newRule.replaceValues(new RegExp('var\\(' + variable.name + '\\)'), variable.value);
         });
-        newRule.replaceValues(new RegExp('var\\(' + ruleDefinition.variable + '\\)'), ruleDefinition.value);
 
         return newRule;
     }
