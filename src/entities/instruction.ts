@@ -1,10 +1,10 @@
 import { InstructionInterface } from './interfaces/instruction.interface';
 import { GlobalVariablesInterface } from './interfaces/globalVariables.interface';
 import { Declaration, Rule } from 'postcss';
-import { RuleDefinitionInterface } from './interfaces/ruleDefinition.interface';
-import { RuleCreationInterface } from './interfaces/ruleCreation.interface';
-import { DeclarationReplaceInterface } from './interfaces/declarationReplace.interface';
-import { VariableEntryInterface } from './interfaces/variableEntry.interface';
+import { RuleDefinitionInterface } from '../interfaces/ruleDefinition.interface';
+import { RuleCreationInterface } from '../interfaces/ruleCreation.interface';
+import { DeclarationReplaceInterface } from '../interfaces/declarationReplace.interface';
+import { VariableEntryInterface } from '../interfaces/variableEntry.interface';
 
 interface InternalRuleDefinitionInterface {
     definition: RuleDefinitionInterface;

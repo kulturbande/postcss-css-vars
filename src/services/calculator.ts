@@ -4,7 +4,7 @@ import { InstructionInterface } from '../entities/interfaces/instruction.interfa
 import { Instruction } from '../entities/instruction';
 import { GlobalVariablesInterface } from '../entities/interfaces/globalVariables.interface';
 import { GlobalVariables } from '../entities/globalVariables';
-import { RuleDefinitionInterface } from '../entities/interfaces/ruleDefinition.interface';
+import { RuleDefinitionInterface } from '../interfaces/ruleDefinition.interface';
 
 export class Calculator {
     private globalVariables: GlobalVariablesInterface;

@@ -1,6 +1,6 @@
 import { GlobalVariablesInterface } from './interfaces/globalVariables.interface';
 import { Container, Rule } from 'postcss';
-import { VariableEntryInterface } from './interfaces/variableEntry.interface';
+import { VariableEntryInterface } from '../interfaces/variableEntry.interface';
 
 interface VariableContainerEntry {
     container: Container;

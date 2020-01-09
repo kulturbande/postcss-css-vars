@@ -1,6 +1,6 @@
 import { Root, Declaration, Rule, AtRule } from 'postcss';
 import { InstructionInterface } from '../entities/interfaces/instruction.interface';
-import { RuleCreationInterface } from '../entities/interfaces/ruleCreation.interface';
+import { RuleCreationInterface } from '../interfaces/ruleCreation.interface';
 
 export class Normalizer {
     constructor(private root: Root, private instruction: InstructionInterface) {}

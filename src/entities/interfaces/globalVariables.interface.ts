@@ -1,5 +1,5 @@
 import { Rule } from 'postcss';
-import { VariableEntryInterface } from './variableEntry.interface';
+import { VariableEntryInterface } from '../../interfaces/variableEntry.interface';
 
 export interface GlobalVariablesInterface {
     add(name: string, value: string, rule: Rule): void;
