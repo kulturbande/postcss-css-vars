@@ -4,8 +4,9 @@
     "jsRules": {},
     "rules": {
         "no-console": true,
-        "quotemark": [true, "single"],
-        "interface-name": false
+        "quotemark": [true, "single", "avoid-escape"],
+        "interface-name": false,
+        "trailing-comma": false
     },
     "rulesDirectory": []
 }

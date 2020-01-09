@@ -1,4 +1,4 @@
-# PostCSS Css Variables
+# PostCSS Css Vars - Resolve CSS Custom Properties
 
 [![Build Status](https://travis-ci.com/kulturbande/postcss-css-variables.svg?branch=master)](https://travis-ci.com/kulturbande/postcss-css-variables)
 
