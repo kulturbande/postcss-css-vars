@@ -70,7 +70,7 @@ export class Calculator {
                 };
                 this.instruction.addRule(rule, { name: setterDeclaration.prop, value: setterDeclaration.value });
             }
-        } else {
+        } else if (this.isVariableSetterNotInRule(getterRule, variable)) {
             // the setter has an own rule
             const rule: RuleDefinitionInterface = {
                 prefixSelector: setterRule.selector,
@@ -85,6 +85,19 @@ export class Calculator {
 
         // add global variables to getter declarations
         this.replaceWithGlobalVariable(getterDeclaration, variable.name);
+    }
+
+    /**
+     *
+     * @param rule getter rule that needs to be inspect
+     * @param variable variable name
+     */
+    private isVariableSetterNotInRule(rule: Rule, variable: VariableInterface): boolean {
+        const setterDeclaration = variable
+            .getSetterDeclarations()
+            .find((declaration: Declaration) => declaration.parent === rule);
+
+        return typeof setterDeclaration === 'undefined';
     }
 
     /**

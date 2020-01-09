@@ -1,0 +1,11 @@
+.foo {
+    padding: 5px;
+    color: #30d;
+    font-size: 14px;
+}
+
+.bar {
+    margin: 7px;
+    font-size: 2em;
+    color: blue;
+}

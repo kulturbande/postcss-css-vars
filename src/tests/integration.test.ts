@@ -9,8 +9,12 @@ describe('Direct usage', () => {
         await testFixture('direct_usage/advanced');
     });
 
-    it('should usable for multiple occasions', async () => {
+    it('should be usable for multiple occasions', async () => {
         await testFixture('direct_usage/multiple_usage');
+    });
+
+    it('should work with multiple variables that are not ordered', async () => {
+        await testFixture('direct_usage/many_variables');
     });
 });
 

@@ -1,0 +1,17 @@
+.foo {
+    padding: var(--padding);
+    --color: #30d;
+    --padding: 5px;
+    --font-size: 14px;
+    color: var(--color);
+    font-size: var(--font-size);
+}
+
+.bar {
+    --font-size: 2em;
+    margin: var(--margin_Strange-VARIABLE);
+    font-size: var(--font-size);
+    color: var(--color);
+    --color: blue;
+    --margin_Strange-VARIABLE: 7px;
+}
