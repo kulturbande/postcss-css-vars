@@ -1,0 +1,14 @@
+a {
+    color: red;
+    font-size: 3em;
+}
+
+.foo {
+    font-weight: 700;
+    font-size: 3em;
+}
+
+.bar .foo {
+    color: red;
+    font-weight: 400;
+}

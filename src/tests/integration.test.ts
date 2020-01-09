@@ -22,6 +22,10 @@ describe('Root Level', () => {
     it('should basically work for body selector', async () => {
         await testFixture('root_level/body');
     });
+
+    it('should overwrite variables if they registered twice', async () => {
+        await testFixture('root_level/multiple_setter');
+    });
 });
 
 describe('Permutation', () => {
