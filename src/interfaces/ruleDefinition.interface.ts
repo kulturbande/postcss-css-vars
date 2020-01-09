@@ -1,4 +1,4 @@
-import { Rule, Root, AtRule } from 'postcss';
+import { AtRule, Root, Rule } from 'postcss';
 
 export interface RuleDefinitionInterface {
     ruleOrigin: Rule;

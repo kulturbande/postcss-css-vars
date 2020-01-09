@@ -1,6 +1,6 @@
-import { GlobalVariablesInterface } from './interfaces/globalVariables.interface';
 import { Container, Rule } from 'postcss';
 import { VariableEntryInterface } from '../interfaces/variableEntry.interface';
+import { GlobalVariablesInterface } from './interfaces/globalVariables.interface';
 
 interface VariableContainerEntry {
     container: Container;
@@ -15,7 +15,7 @@ export class GlobalVariables implements GlobalVariablesInterface {
      * @param value the value ;-)
      * @param rule current rule
      */
-    add(name: string, value: string, rule: Rule): void {
+    public add(name: string, value: string, rule: Rule): void {
         this.getVariablesForLevel(rule.parent).variables[name] = { name, value };
     }
 
@@ -24,7 +24,7 @@ export class GlobalVariables implements GlobalVariablesInterface {
      * @param name variable name
      * @param rule current rule
      */
-    get(name: string, rule: Rule): string | null {
+    public get(name: string, rule: Rule): string | null {
         if (typeof this.getVariableEntry(name, rule.parent) !== 'undefined') {
             return this.getVariableEntry(name, rule.parent).value;
         } else if (typeof this.getVariableEntry(name, rule.parent?.parent as Container) !== 'undefined') {
@@ -37,7 +37,7 @@ export class GlobalVariables implements GlobalVariablesInterface {
      * get all variables that are in the scope of the given rule
      * @param rule current rule
      */
-    all(rule: Rule): VariableEntryInterface[] {
+    public all(rule: Rule): VariableEntryInterface[] {
         let allVariables = this.getVariablesForLevel(rule.parent).variables;
         if (rule.parent.type === 'atrule') {
             allVariables = { ...this.getVariablesForLevel(rule.parent.parent).variables, ...allVariables };

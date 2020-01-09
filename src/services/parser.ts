@@ -1,4 +1,4 @@
-import { Root, Declaration, Rule } from 'postcss';
+import { Declaration, Root, Rule } from 'postcss';
 import { VariableInterface } from '../entities/interfaces/variable.interface';
 import { Variable } from '../entities/variable';
 

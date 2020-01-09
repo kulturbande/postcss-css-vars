@@ -1,7 +1,7 @@
 import { Declaration } from 'postcss';
-import { RuleDefinitionInterface } from '../../interfaces/ruleDefinition.interface';
-import { RuleCreationInterface } from '../../interfaces/ruleCreation.interface';
 import { DeclarationReplaceInterface } from '../../interfaces/declarationReplace.interface';
+import { RuleCreationInterface } from '../../interfaces/ruleCreation.interface';
+import { RuleDefinitionInterface } from '../../interfaces/ruleDefinition.interface';
 import { VariableEntryInterface } from '../../interfaces/variableEntry.interface';
 
 export interface InstructionInterface {

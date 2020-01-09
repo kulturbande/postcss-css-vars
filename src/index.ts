@@ -1,7 +1,7 @@
 import postcss, { Result, Root } from 'postcss';
-import { Parser } from './services/parser';
 import { Calculator } from './services/calculator';
 import { Normalizer } from './services/normalizer';
+import { Parser } from './services/parser';
 
 const plugin = postcss.plugin('postcss-css-variables', (opts = {}) => {
     return (root: Root, result: Result) => {

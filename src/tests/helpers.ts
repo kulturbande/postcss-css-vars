@@ -20,7 +20,7 @@ async function readFixture(name: string, postfix: string): Promise<string> {
 
 export async function testFixture(fixtureName: string, opts: object = {}) {
     const acceptedPlugin: postcss.AcceptedPlugin = plugin(opts);
-    let result = await postcss([acceptedPlugin]).process(await readFixture(fixtureName, 'input'), {
+    const result = await postcss([acceptedPlugin]).process(await readFixture(fixtureName, 'input'), {
         from: undefined,
     });
     expect(result.css).toEqual(await readFixture(fixtureName, 'output'));

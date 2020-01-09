@@ -1,4 +1,4 @@
-import { Root, Declaration, Rule, AtRule } from 'postcss';
+import { AtRule, Declaration, Root, Rule } from 'postcss';
 import { InstructionInterface } from '../entities/interfaces/instruction.interface';
 import { RuleCreationInterface } from '../interfaces/ruleCreation.interface';
 

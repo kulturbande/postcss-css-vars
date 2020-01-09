@@ -1,9 +1,9 @@
-import { VariableInterface } from '../entities/interfaces/variable.interface';
-import { Declaration, Rule, AtRule, Container } from 'postcss';
-import { InstructionInterface } from '../entities/interfaces/instruction.interface';
+import { AtRule, Declaration, Rule } from 'postcss';
+import { GlobalVariables } from '../entities/globalVariables';
 import { Instruction } from '../entities/instruction';
 import { GlobalVariablesInterface } from '../entities/interfaces/globalVariables.interface';
-import { GlobalVariables } from '../entities/globalVariables';
+import { InstructionInterface } from '../entities/interfaces/instruction.interface';
+import { VariableInterface } from '../entities/interfaces/variable.interface';
 import { RuleDefinitionInterface } from '../interfaces/ruleDefinition.interface';
 
 export class Calculator {
@@ -64,17 +64,17 @@ export class Calculator {
 
             // create a new rule if the getter is on root level and the setter is in a media query
             if (getterAtRule === null && setterAtRule) {
-                let rule: RuleDefinitionInterface = {
-                    ruleOrigin: getterRule,
+                const rule: RuleDefinitionInterface = {
                     container: setterAtRule,
+                    ruleOrigin: getterRule,
                 };
                 this.instruction.addRule(rule, { name: setterDeclaration.prop, value: setterDeclaration.value });
             }
         } else {
             // the setter has an own rule
             const rule: RuleDefinitionInterface = {
-                ruleOrigin: getterRule,
                 prefixSelector: setterRule.selector,
+                ruleOrigin: getterRule,
             };
 
             this.instruction.addRule(rule, { name: setterDeclaration.prop, value: setterDeclaration.value });

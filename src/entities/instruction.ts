@@ -1,10 +1,10 @@
-import { InstructionInterface } from './interfaces/instruction.interface';
-import { GlobalVariablesInterface } from './interfaces/globalVariables.interface';
 import { Declaration, Rule } from 'postcss';
-import { RuleDefinitionInterface } from '../interfaces/ruleDefinition.interface';
-import { RuleCreationInterface } from '../interfaces/ruleCreation.interface';
 import { DeclarationReplaceInterface } from '../interfaces/declarationReplace.interface';
+import { RuleCreationInterface } from '../interfaces/ruleCreation.interface';
+import { RuleDefinitionInterface } from '../interfaces/ruleDefinition.interface';
 import { VariableEntryInterface } from '../interfaces/variableEntry.interface';
+import { GlobalVariablesInterface } from './interfaces/globalVariables.interface';
+import { InstructionInterface } from './interfaces/instruction.interface';
 
 interface InternalRuleDefinitionInterface {
     definition: RuleDefinitionInterface;
@@ -47,7 +47,8 @@ export class Instruction implements InstructionInterface {
      * @param variable variable that should be replaced
      */
     public addRule(ruleDefinition: RuleDefinitionInterface, variable: VariableEntryInterface): InstructionInterface {
-        // be aware that the comparison between the whole each entry of the object is another one, that the object itself
+        // be aware that the comparison between the whole each entry of the object is another one, that the object
+        // itself
         const rule = this.rulesToCreate.find(
             (entry: InternalRuleDefinitionInterface) =>
                 entry.definition.container === ruleDefinition.container &&
@@ -96,7 +97,7 @@ export class Instruction implements InstructionInterface {
      * @param rule values of the new rule
      */
     private getNewRule(rule: InternalRuleDefinitionInterface): Rule {
-        let newRule = rule.definition.ruleOrigin.clone();
+        const newRule = rule.definition.ruleOrigin.clone();
 
         if (rule.definition.prefixSelector) {
             newRule.selector = rule.definition.prefixSelector + ' ' + newRule.selector;

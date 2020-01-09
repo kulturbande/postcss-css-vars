@@ -1,5 +1,5 @@
-import { VariableInterface } from './interfaces/variable.interface';
 import { Declaration } from 'postcss';
+import { VariableInterface } from './interfaces/variable.interface';
 
 export class Variable implements VariableInterface {
     private setterDeclarations: Declaration[] = [];
