@@ -1,0 +1,8 @@
+body {
+    --color: green;
+    font-size: 2em;
+}
+
+a {
+    color: var(--color);
+}

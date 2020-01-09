@@ -30,6 +30,10 @@ describe('Root Level', () => {
     it('should overwrite variables if they registered twice', async () => {
         await testFixture('root_level/multiple_setter');
     });
+
+    it('should leave the body intact, if it is not empty', async () => {
+        await testFixture('root_level/body_intact');
+    });
 });
 
 describe('Permutation', () => {
