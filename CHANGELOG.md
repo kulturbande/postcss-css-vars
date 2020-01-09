@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   more comments
+
 ### Changed
 
 -   moved not-entity interfaces to a seperate folder
+-   more descriptive method names
 
 ## [0.0.4] -2020-01-08
 

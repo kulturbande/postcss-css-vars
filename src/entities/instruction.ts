@@ -43,10 +43,8 @@ export class Instruction implements InstructionInterface {
 
     /**
      * add a new rule to the CSS
-     * @param toCopyDeclaration rule that should be copied
-     * @param prefixSelector the selector that should be added to the rule
-     * @param variable variable name
-     * @param value variable value
+     * @param ruleDefinition rule information which are necessary to create a new one
+     * @param variable variable that should be replaced
      */
     public addRule(ruleDefinition: RuleDefinitionInterface, variable: VariableEntryInterface): InstructionInterface {
         // be aware that the comparison between the whole each entry of the object is another one, that the object itself

@@ -7,9 +7,9 @@ const plugin = postcss.plugin('postcss-css-variables', (opts = {}) => {
     return (root: Root, result: Result) => {
         const parser = new Parser(root);
         const calculator = new Calculator(parser.getVariables());
-        const normalizer = new Normalizer(root, calculator.calculateRulePermutations());
+        const normalizer = new Normalizer(root);
 
-        normalizer.normalize();
+        normalizer.interpret(calculator.getInstructions());
 
         return root;
     };

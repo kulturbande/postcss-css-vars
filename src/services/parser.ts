@@ -7,6 +7,9 @@ export class Parser {
 
     constructor(private root: Root) {}
 
+    /**
+     * parse the root and get all variables
+     */
     public getVariables(): VariableInterface[] {
         this.parseRoot(this.root);
         return Object.values(this.variables);

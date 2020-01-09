@@ -3,17 +3,24 @@ import { InstructionInterface } from '../entities/interfaces/instruction.interfa
 import { RuleCreationInterface } from '../interfaces/ruleCreation.interface';
 
 export class Normalizer {
-    constructor(private root: Root, private instruction: InstructionInterface) {}
+    constructor(private root: Root) {}
 
-    public normalize() {
-        this.createRules();
-        this.replaceDeclarations();
-        this.cleanupDeclarations();
+    /**
+     * initialize the CSS changes
+     * @param instruction instructions to interpret
+     */
+    public interpret(instruction: InstructionInterface) {
+        this.createRules(instruction);
+        this.replaceDeclarations(instruction);
+        this.cleanupDeclarations(instruction);
         this.fixIndentation();
     }
 
-    private createRules() {
-        this.instruction.getRulesToCreate().forEach((entry: RuleCreationInterface) => {
+    /**
+     * create new rules
+     */
+    private createRules(instruction: InstructionInterface) {
+        instruction.getRulesToCreate().forEach((entry: RuleCreationInterface) => {
             if (typeof entry.container !== 'undefined') {
                 entry.container.append(entry.rule);
             } else {
@@ -22,16 +29,20 @@ export class Normalizer {
         });
     }
 
-    private replaceDeclarations() {
-        this.instruction
-            .getDeclarationsToChange()
-            .forEach((value: { declaration: Declaration; valueToReplace: string }) => {
-                value.declaration.value = value.valueToReplace;
-            });
+    /**
+     * replace variables in given declaration
+     */
+    private replaceDeclarations(instruction: InstructionInterface) {
+        instruction.getDeclarationsToChange().forEach((value: { declaration: Declaration; valueToReplace: string }) => {
+            value.declaration.value = value.valueToReplace;
+        });
     }
 
-    private cleanupDeclarations(): void {
-        this.instruction.getDeclarationsToRemove().forEach((declaration: Declaration) => {
+    /**
+     * remove declarations
+     */
+    private cleanupDeclarations(instruction: InstructionInterface): void {
+        instruction.getDeclarationsToRemove().forEach((declaration: Declaration) => {
             if (declaration.parent) {
                 if (declaration.parent.nodes?.length === 1) {
                     declaration.parent.remove(); // remove the rule, if only one declaration is left

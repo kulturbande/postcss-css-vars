@@ -15,25 +15,30 @@ export class Calculator {
         this.instruction = new Instruction(this.globalVariables);
     }
 
-    public calculateRulePermutations(): InstructionInterface {
+    /**
+     * iterate over all variables and create instructions to change later the CSS
+     */
+    public getInstructions(): InstructionInterface {
         this.globalVariables = new GlobalVariables();
         this.instruction = new Instruction(this.globalVariables);
 
         this.variables.forEach((variable: VariableInterface) => {
-            this.compareDeclarationsOfVariable(variable);
+            variable.getSetterDeclarations().forEach((setterDeclaration: Declaration) => {
+                variable.getGetterDeclarations().forEach((getterDeclaration: Declaration) => {
+                    this.compareDeclarations(variable, setterDeclaration, getterDeclaration);
+                });
+            });
         });
 
         return this.instruction;
     }
 
-    private compareDeclarationsOfVariable(variable: VariableInterface): void {
-        variable.getSetterDeclarations().forEach((setterDeclaration: Declaration) => {
-            variable.getGetterDeclarations().forEach((getterDeclaration: Declaration) => {
-                this.compareDeclarations(variable, setterDeclaration, getterDeclaration);
-            });
-        });
-    }
-
+    /**
+     * compare given declarations with each other and create instructions if necessary
+     * @param variable current variable
+     * @param setterDeclaration given setter declaration
+     * @param getterDeclaration current getter declaration
+     */
     private compareDeclarations(
         variable: VariableInterface,
         setterDeclaration: Declaration,
@@ -108,6 +113,10 @@ export class Calculator {
         throw new Error("Can't find parent for " + declaration.toString());
     }
 
+    /**
+     * get at rule container if available
+     * @param rule current rule
+     */
     private getAtRule(rule: Rule): AtRule | null {
         if (rule.parent.type === 'atrule') {
             return rule.parent;
