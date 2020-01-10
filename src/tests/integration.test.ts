@@ -16,6 +16,10 @@ describe('Direct usage', () => {
     it('should work with multiple variables that are not ordered', async () => {
         await testFixture('direct_usage/many_variables');
     });
+
+    it('should support multiple getters for the same declaration', async () => {
+        await testFixture('direct_usage/multiple_getters');
+    });
 });
 
 describe('Root Level', () => {
@@ -43,6 +47,10 @@ describe('Permutation', () => {
 
     it("should use global variables if the variable isn't available", async () => {
         await testFixture('permutation/multiple_variables');
+    });
+
+    it('should work with multiple, overlaying variables', async () => {
+        await testFixture('permutation/complex');
     });
 });
 

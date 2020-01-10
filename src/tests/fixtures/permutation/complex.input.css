@@ -1,0 +1,28 @@
+body {
+    --color: #123456;
+    --font-weight: 700;
+    --border-size: 1px;
+}
+
+.orange {
+    --color: rgba(0, 30, 80, 0.5);
+}
+
+.fine {
+    --font-weight: 400;
+    --border-size: 3px;
+}
+
+.foo {
+    color: var(--color);
+    font-weight: var(--font-weight);
+}
+
+.bar {
+    border-left: var(--border-size) solid var(--color);
+    font-weight: var(--font-weight);
+}
+
+.fooBar {
+    border: var(--border-size) dotted black;
+}

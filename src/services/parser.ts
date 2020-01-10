@@ -32,7 +32,7 @@ export class Parser {
      */
     private parseDeclaration(declaration: Declaration) {
         const setter = declaration.prop.match(/^(--[\w|\-]+)/);
-        const getter = declaration.value.match(/var\((--[\w|\-]+)\)/);
+        const getter = declaration.value.match(/var\((--[\w|\-]+)\)/g);
 
         const initializeVariable = (name: string): string => {
             if (typeof this.variables[name] === 'undefined') {
@@ -45,8 +45,12 @@ export class Parser {
             const name: string = initializeVariable(setter[1]);
             this.variables[name].addSetterDeclaration(declaration);
         } else if (getter !== null) {
-            const name: string = initializeVariable(getter[1]);
-            this.variables[name].addGetterDeclaration(declaration);
+            // multiple getters are possible; capture groups don't work here atm.
+            getter.forEach((match: string) => {
+                const name: string = match.replace(/var\(|\)/g, '');
+                initializeVariable(name);
+                this.variables[name].addGetterDeclaration(declaration);
+            });
         }
     }
 }

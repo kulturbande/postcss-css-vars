@@ -32,12 +32,54 @@ export class Instruction implements InstructionInterface {
     /**
      * change this declaration
      * @param declaration change given declaration
-     * @param variable search for this variable and...
-     * @param value ...replace it with this value
+     * @param variable search for this variable
      */
-    public changeDeclaration(declaration: Declaration, variable: string, value: string): InstructionInterface {
-        const replacedWith = new RegExp('var\\(' + variable + '\\)');
-        this.replaceDeclarations.push({ declaration, valueToReplace: declaration.value.replace(replacedWith, value) });
+    public changeDeclaration(declaration: Declaration, variable: VariableEntryInterface): InstructionInterface {
+        /**
+         * generate the new value of the declaration
+         * @param valueToReplace previous value
+         * @param variables all given variables
+         */
+        const generateReplacedValue = (valueToReplace: string, variables: VariableEntryInterface[]): string => {
+            variables.forEach((entry: VariableEntryInterface) => {
+                valueToReplace = valueToReplace.replace(new RegExp('var\\(' + entry.name + '\\)'), entry.value);
+            });
+            return valueToReplace;
+        };
+
+        const replaceableDeclaration: DeclarationReplaceInterface | undefined = this.replaceDeclarations.find(
+            (entry: DeclarationReplaceInterface) => {
+                return entry.declaration === declaration;
+            }
+        );
+
+        // is the declaration already stored?
+        if (replaceableDeclaration) {
+            const alreadyStoredVariable: VariableEntryInterface | undefined = replaceableDeclaration.variables.find(
+                (entry: VariableEntryInterface) => entry.name === variable.name
+            );
+
+            // add the variable if it isn't available
+            if (typeof alreadyStoredVariable === 'undefined') {
+                replaceableDeclaration.variables.push(variable);
+            } else {
+                // update the value if it was already set
+                alreadyStoredVariable.value = variable.value;
+            }
+
+            replaceableDeclaration.valueToReplace = generateReplacedValue(
+                replaceableDeclaration.declaration.value,
+                replaceableDeclaration.variables
+            );
+        } else {
+            const variables = [variable];
+            this.replaceDeclarations.push({
+                declaration,
+                valueToReplace: generateReplacedValue(declaration.value, variables),
+                variables,
+            });
+        }
+
         return this;
     }
 

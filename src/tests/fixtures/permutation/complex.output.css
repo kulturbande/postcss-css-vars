@@ -1,0 +1,37 @@
+.foo {
+    color: #123456;
+    font-weight: 700;
+}
+
+.bar {
+    border-left: 1px solid #123456;
+    font-weight: 700;
+}
+
+.fooBar {
+    border: 1px dotted black;
+}
+
+.orange .foo {
+    color: rgba(0, 30, 80, 0.5);
+    font-weight: 700;
+}
+
+.orange .bar {
+    border-left: 1px solid rgba(0, 30, 80, 0.5);
+    font-weight: 700;
+}
+
+.fine .foo {
+    color: #123456;
+    font-weight: 400;
+}
+
+.fine .bar {
+    border-left: 3px solid #123456;
+    font-weight: 400;
+}
+
+.fine .fooBar {
+    border: 3px dotted black;
+}

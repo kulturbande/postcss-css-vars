@@ -14,10 +14,9 @@ export interface InstructionInterface {
     /**
      * change this declaration
      * @param declaration change given declaration
-     * @param variable search for this variable and...
-     * @param value ...replace it with this value
+     * @param variable search for this variable
      */
-    changeDeclaration(declaration: Declaration, variable: string, value: string): InstructionInterface;
+    changeDeclaration(declaration: Declaration, variable: VariableEntryInterface): InstructionInterface;
 
     /**
      * add a new rule to the CSS

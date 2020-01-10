@@ -53,7 +53,10 @@ export class Calculator {
 
         // the same rule
         if (setterRule === getterRule) {
-            this.instruction.changeDeclaration(getterDeclaration, variable.name, setterDeclaration.value);
+            this.instruction.changeDeclaration(getterDeclaration, {
+                name: variable.name,
+                value: setterDeclaration.value,
+            });
             this.instruction.removeDeclaration(setterDeclaration);
             return;
         }
@@ -109,7 +112,7 @@ export class Calculator {
     private replaceWithGlobalVariable(getterDeclaration: Declaration, variableName: string): boolean {
         const value = this.globalVariables.get(variableName, this.getRule(getterDeclaration));
         if (value) {
-            this.instruction.changeDeclaration(getterDeclaration, variableName, value);
+            this.instruction.changeDeclaration(getterDeclaration, { name: variableName, value });
             return true;
         }
         return false;
