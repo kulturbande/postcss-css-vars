@@ -6,7 +6,9 @@
         "no-console": true,
         "quotemark": [true, "single", "avoid-escape"],
         "interface-name": false,
-        "trailing-comma": false
+        "trailing-comma": false,
+        "array-type": false,
+        "arrow-parens": false
     },
     "rulesDirectory": []
 }

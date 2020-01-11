@@ -49,6 +49,10 @@ describe('Permutation', () => {
         await testFixture('permutation/multiple_variables');
     });
 
+    it('should use class permutations for multiple setter', async () => {
+        await testFixture('permutation/class_permutation');
+    });
+
     it('should work with multiple, overlaying variables', async () => {
         await testFixture('permutation/complex');
     });

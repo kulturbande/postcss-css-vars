@@ -35,3 +35,15 @@
 .fine .fooBar {
     border: 3px dotted black;
 }
+
+.orange .fine .foo,
+.fine .orange .foo {
+    color: rgba(0, 30, 80, 0.5);
+    font-weight: 400;
+}
+
+.orange .fine .bar,
+.fine .orange .bar {
+    border-left: 3px solid rgba(0, 30, 80, 0.5);
+    font-weight: 400;
+}

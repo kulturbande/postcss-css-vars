@@ -12,3 +12,9 @@
     color: pink;
     font-weight: 400;
 }
+
+.orange .fine .foo,
+.fine .orange .foo {
+    color: orange;
+    font-weight: 400;
+}

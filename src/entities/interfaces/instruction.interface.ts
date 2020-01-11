@@ -23,7 +23,7 @@ export interface InstructionInterface {
      * @param ruleDefinition rule information which are necessary to create a new one
      * @param variable variable that should be replaced
      */
-    addRule(ruleDefinition: RuleDefinitionInterface, variable: VariableEntryInterface): InstructionInterface;
+    addRule(ruleDefinition: RuleDefinitionInterface, variables: VariableEntryInterface[]): InstructionInterface;
 
     /**
      * get declaration that should be removed

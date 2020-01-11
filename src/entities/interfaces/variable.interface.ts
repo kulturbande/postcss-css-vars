@@ -1,4 +1,4 @@
-import { Declaration } from 'postcss';
+import { Declaration, Rule } from 'postcss';
 
 export interface VariableInterface {
     name: string;
@@ -24,4 +24,9 @@ export interface VariableInterface {
      * get all stored getter declarations
      */
     getGetterDeclarations(): Declaration[];
+
+    /**
+     * get all stored getter rules
+     */
+    getGetterRules(): Rule[];
 }

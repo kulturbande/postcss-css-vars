@@ -1,0 +1,20 @@
+.warning {
+    color: red;
+    font-size: 2em;
+}
+
+.color .warning {
+    color: pink;
+    font-size: 2em;
+}
+
+.font .warning {
+    color: red;
+    font-size: 3em;
+}
+
+.color .font .warning,
+.font .color .warning {
+    color: pink;
+    font-size: 3em;
+}

@@ -1,0 +1,17 @@
+:root {
+    --color: red;
+    --font-size: 2em;
+}
+
+.color {
+    --color: pink;
+}
+
+.font {
+    --font-size: 3em;
+}
+
+.warning {
+    color: var(--color);
+    font-size: var(--font-size);
+}

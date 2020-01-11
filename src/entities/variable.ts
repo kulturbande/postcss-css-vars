@@ -1,9 +1,10 @@
-import { Declaration } from 'postcss';
+import { Declaration, Rule } from 'postcss';
 import { VariableInterface } from './interfaces/variable.interface';
 
 export class Variable implements VariableInterface {
     private setterDeclarations: Declaration[] = [];
     private getterDeclarations: Declaration[] = [];
+    private getterRules: Rule[] = [];
 
     constructor(public name: string) {}
 
@@ -21,6 +22,10 @@ export class Variable implements VariableInterface {
      */
     public addGetterDeclaration(declaration: Declaration) {
         this.getterDeclarations.push(declaration);
+        const rule: Rule = declaration.parent as Rule;
+        if (this.getterRules.indexOf(rule) === -1) {
+            this.getterRules.push(rule);
+        }
     }
 
     /**
@@ -35,5 +40,12 @@ export class Variable implements VariableInterface {
      */
     public getGetterDeclarations(): Declaration[] {
         return this.getterDeclarations;
+    }
+
+    /**
+     * get all stored getter rules
+     */
+    public getGetterRules(): Rule[] {
+        return this.getterRules;
     }
 }

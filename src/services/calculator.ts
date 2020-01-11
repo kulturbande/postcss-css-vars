@@ -5,10 +5,20 @@ import { GlobalVariablesInterface } from '../entities/interfaces/globalVariables
 import { InstructionInterface } from '../entities/interfaces/instruction.interface';
 import { VariableInterface } from '../entities/interfaces/variable.interface';
 import { RuleDefinitionInterface } from '../interfaces/ruleDefinition.interface';
+import { VariableEntryInterface } from '../interfaces/variableEntry.interface';
+
+interface RulePermutationInterface {
+    ruleOrigin: Rule;
+    settings: {
+        selector: string;
+        variables: VariableEntryInterface[];
+    }[];
+}
 
 export class Calculator {
     private globalVariables: GlobalVariablesInterface;
     private instruction: InstructionInterface;
+    private rulePermutations: RulePermutationInterface[] = [];
 
     constructor(private variables: VariableInterface[]) {
         this.globalVariables = new GlobalVariables();
@@ -21,6 +31,7 @@ export class Calculator {
     public getInstructions(): InstructionInterface {
         this.globalVariables = new GlobalVariables();
         this.instruction = new Instruction(this.globalVariables);
+        this.rulePermutations = [];
 
         this.variables.forEach((variable: VariableInterface) => {
             variable.getSetterDeclarations().forEach((setterDeclaration: Declaration) => {
@@ -30,7 +41,52 @@ export class Calculator {
             });
         });
 
+        this.rulePermutations.forEach(permutation => this.addRulePermutation(permutation));
+
         return this.instruction;
+    }
+
+    /**
+     * create new permutation rule (necessary for multiple setters for one getter)
+     * @param permutation permutation to add
+     */
+    private addRulePermutation(permutation: RulePermutationInterface) {
+        if (permutation.settings.length < 2) {
+            return;
+        }
+
+        const moveSelectorPositions = (items: string[], position: number): void => {
+            items.splice(position + 1, 0, items.splice(position, 1)[0]);
+        };
+
+        const getGeneratedSelectors = (items: string[], maxSelectorPermutation: number = 3): string[] => {
+            if (items.length < maxSelectorPermutation) {
+                maxSelectorPermutation = items.length;
+            }
+
+            const maxIterations = maxSelectorPermutation * ((maxSelectorPermutation + 1) / 2);
+            const generatedResult: string[] = [];
+
+            for (let i = 1; i < maxIterations; i++) {
+                generatedResult.push(items.join(' '));
+                moveSelectorPositions(items, i % (maxSelectorPermutation - 1));
+            }
+            return generatedResult;
+        };
+
+        const selectors: string[] = [];
+        const rule: RuleDefinitionInterface = {
+            ruleOrigin: permutation.ruleOrigin,
+        };
+        let variables: VariableEntryInterface[] = [];
+
+        permutation.settings.forEach(entry => {
+            variables = variables.concat(entry.variables);
+            selectors.push(entry.selector);
+        });
+
+        rule.prefixSelectors = getGeneratedSelectors(selectors);
+        this.instruction.addRule(rule, variables);
     }
 
     /**
@@ -71,16 +127,46 @@ export class Calculator {
                     container: setterAtRule,
                     ruleOrigin: getterRule,
                 };
-                this.instruction.addRule(rule, { name: setterDeclaration.prop, value: setterDeclaration.value });
+                this.instruction.addRule(rule, [{ name: setterDeclaration.prop, value: setterDeclaration.value }]);
             }
         } else if (this.isVariableSetterNotInRule(getterRule, variable)) {
             // the setter has an own rule
             const rule: RuleDefinitionInterface = {
-                prefixSelector: setterRule.selector,
+                prefixSelectors: [setterRule.selector],
                 ruleOrigin: getterRule,
             };
+            const ruleVariable: VariableEntryInterface = {
+                name: setterDeclaration.prop,
+                value: setterDeclaration.value,
+            };
+            this.instruction.addRule(rule, [ruleVariable]);
 
-            this.instruction.addRule(rule, { name: setterDeclaration.prop, value: setterDeclaration.value });
+            if (this.hasRuleAnotherVariableGetter(variable, getterRule)) {
+                const previousPermutation = this.rulePermutations.find(entry => entry.ruleOrigin === getterRule);
+                const setting = {
+                    selector: setterRule.selector,
+                    variables: [ruleVariable],
+                };
+
+                // oh god, this is so ugly
+                // TODO: create a helper for these push find mechanic
+                if (previousPermutation) {
+                    const previousIncludedSetting = previousPermutation.settings.find(
+                        item => item.selector === setting.selector
+                    );
+
+                    if (previousIncludedSetting) {
+                        previousIncludedSetting.variables.push(ruleVariable);
+                    } else {
+                        previousPermutation.settings.push(setting);
+                    }
+                } else {
+                    this.rulePermutations.push({
+                        ruleOrigin: rule.ruleOrigin,
+                        settings: [setting],
+                    });
+                }
+            }
         }
 
         // remove the setter
@@ -88,6 +174,18 @@ export class Calculator {
 
         // add global variables to getter declarations
         this.replaceWithGlobalVariable(getterDeclaration, variable.name);
+    }
+
+    /**
+     * found out if another variable also has this rule as a getter
+     * @param variable current variable
+     * @param rule getter rule
+     */
+    private hasRuleAnotherVariableGetter(variable: VariableInterface, rule: Rule): boolean {
+        const foundVariable = this.variables.find(
+            (entry: VariableInterface) => entry !== variable && entry.getGetterRules().indexOf(rule) !== -1
+        );
+        return typeof foundVariable !== 'undefined';
     }
 
     /**

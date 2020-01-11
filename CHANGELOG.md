@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   more (edgy) tests
+-   rule permutation behavior (the calculator service needs some cleanup later)
 
 ### Changed
 

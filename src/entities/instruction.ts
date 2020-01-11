@@ -88,22 +88,23 @@ export class Instruction implements InstructionInterface {
      * @param ruleDefinition rule information which are necessary to create a new one
      * @param variable variable that should be replaced
      */
-    public addRule(ruleDefinition: RuleDefinitionInterface, variable: VariableEntryInterface): InstructionInterface {
+    public addRule(ruleDefinition: RuleDefinitionInterface, variables: VariableEntryInterface[]): InstructionInterface {
         // be aware that the comparison between the whole each entry of the object is another one, that the object
         // itself
+        // TODO: maybe use Ramda or lodash
         const rule = this.rulesToCreate.find(
             (entry: InternalRuleDefinitionInterface) =>
                 entry.definition.container === ruleDefinition.container &&
-                entry.definition.prefixSelector === ruleDefinition.prefixSelector &&
+                JSON.stringify(entry.definition.prefixSelectors) === JSON.stringify(ruleDefinition.prefixSelectors) &&
                 entry.definition.ruleOrigin === ruleDefinition.ruleOrigin
         );
 
         // the rule was not created?
         if (typeof rule === 'undefined') {
-            this.rulesToCreate.push({ definition: ruleDefinition, variables: [variable] });
+            this.rulesToCreate.push({ definition: ruleDefinition, variables });
         } else {
             // add the variable to the previous found rule
-            rule.variables.push(variable);
+            variables.forEach(variable => rule.variables.push(variable));
         }
 
         return this;
@@ -141,8 +142,12 @@ export class Instruction implements InstructionInterface {
     private getNewRule(rule: InternalRuleDefinitionInterface): Rule {
         const newRule = rule.definition.ruleOrigin.clone();
 
-        if (rule.definition.prefixSelector) {
-            newRule.selector = rule.definition.prefixSelector + ' ' + newRule.selector;
+        if (rule.definition.prefixSelectors) {
+            newRule.selector = rule.definition.prefixSelectors
+                .map(prefix => {
+                    return prefix + ' ' + newRule.selector;
+                })
+                .join(',\n');
         }
 
         const variables = [...rule.variables, ...this.globalVariables.all(rule.definition.ruleOrigin)];
