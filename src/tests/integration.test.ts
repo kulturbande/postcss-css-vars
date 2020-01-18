@@ -72,6 +72,10 @@ describe('Permutation', () => {
     it('should work with same setter that are using multiple classes', async () => {
         await testFixture('permutation/same_setter_with_multiple_classes');
     });
+
+    it('should work with multiple selectors', async () => {
+        await testFixture('permutation/multiple_selectors');
+    });
 });
 
 describe('Media Queries', () => {

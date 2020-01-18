@@ -142,10 +142,17 @@ export class Instruction implements InstructionInterface {
     private getNewRule(rule: InternalRuleDefinitionInterface): Rule {
         const newRule = rule.definition.ruleOrigin.clone();
 
-        if (rule.definition.prefixSelectors) {
-            newRule.selector = rule.definition.prefixSelectors
-                .map(prefix => {
-                    return prefix + ' ' + newRule.selector;
+        if (typeof rule.definition.prefixSelectors !== 'undefined') {
+            const selectors = newRule.selector.split(',');
+            const prefixSelectors = rule.definition.prefixSelectors;
+
+            newRule.selector = selectors
+                .map(selector => {
+                    return prefixSelectors
+                        .map(prefix => {
+                            return prefix + ' ' + selector.trim();
+                        })
+                        .join(',\n');
                 })
                 .join(',\n');
         }

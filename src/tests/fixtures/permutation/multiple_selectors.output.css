@@ -1,0 +1,9 @@
+a,
+p {
+    color: red;
+}
+
+.orange a,
+.orange p {
+    color: orange;
+}
