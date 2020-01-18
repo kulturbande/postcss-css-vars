@@ -1,0 +1,16 @@
+:root {
+    --color: red;
+}
+
+:root {
+    --font-size: 14px;
+}
+
+a {
+    color: var(--color);
+    font-size: var(--font-size);
+}
+
+p {
+    font-size: var(--font-size);
+}

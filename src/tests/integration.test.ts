@@ -42,6 +42,10 @@ describe('Root Level', () => {
     it('should leave the body intact, if it is not empty', async () => {
         await testFixture('root_level/body_intact');
     });
+
+    it('should allow multiple root definitions', async () => {
+        await testFixture('root_level/multiple_root');
+    });
 });
 
 describe('Permutation', () => {
