@@ -7,7 +7,7 @@
         "css",
         "postcss-plugin",
         "custom",
-        "propertier",
+        "properties",
         "variables"
     ],
     "main": "dist/index.js",

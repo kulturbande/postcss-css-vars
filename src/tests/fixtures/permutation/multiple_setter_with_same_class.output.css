@@ -1,0 +1,9 @@
+.getter {
+    color: red;
+    font-size: 12px;
+}
+
+.setter .getter {
+    color: orange;
+    font-size: 16px;
+}

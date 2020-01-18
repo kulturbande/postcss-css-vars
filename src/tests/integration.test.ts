@@ -64,6 +64,10 @@ describe('Permutation', () => {
     it('should work with multiple, overlaying variables', async () => {
         await testFixture('permutation/complex');
     });
+
+    it('should work with multiple setter that are using the same class', async () => {
+        await testFixture('permutation/multiple_setter_with_same_class');
+    });
 });
 
 describe('Media Queries', () => {

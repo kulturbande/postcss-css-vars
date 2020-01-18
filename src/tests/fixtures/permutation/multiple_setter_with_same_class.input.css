@@ -1,0 +1,17 @@
+:root {
+    --color: red;
+    --font-size: 12px;
+}
+
+.setter {
+    --color: orange;
+}
+
+.setter {
+    --font-size: 16px;
+}
+
+.getter {
+    color: var(--color);
+    font-size: var(--font-size);
+}
