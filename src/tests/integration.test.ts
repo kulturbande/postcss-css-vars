@@ -20,6 +20,10 @@ describe('Direct usage', () => {
     it('should support multiple getters for the same declaration', async () => {
         await testFixture('direct_usage/multiple_getters');
     });
+
+    it('should support multiple selectors with the same variable', async () => {
+        await testFixture('direct_usage/two_selectors');
+    });
 });
 
 describe('Root Level', () => {

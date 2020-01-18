@@ -1,0 +1,9 @@
+a,
+p {
+    color: red;
+}
+
+input,
+textarea {
+    border: 1px solid orange;
+}

@@ -1,0 +1,11 @@
+a,
+p {
+    --color: red;
+    color: var(--color);
+}
+
+input,
+textarea {
+    --color: orange;
+    border: 1px solid var(--color);
+}
