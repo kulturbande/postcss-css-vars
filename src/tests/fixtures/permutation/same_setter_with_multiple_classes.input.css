@@ -1,0 +1,15 @@
+:root {
+    --color: blue;
+}
+
+p {
+    color: var(--color);
+}
+
+.red {
+    --color: red;
+}
+
+.orange {
+    --color: orange;
+}

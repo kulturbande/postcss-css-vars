@@ -1,0 +1,11 @@
+p {
+    color: blue;
+}
+
+.red p {
+    color: red;
+}
+
+.orange p {
+    color: orange;
+}
