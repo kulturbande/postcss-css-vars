@@ -16,8 +16,6 @@ export class Instruction implements InstructionInterface {
     private replaceDeclarations: DeclarationReplaceInterface[] = [];
     private rulesToCreate: InternalRuleDefinitionInterface[] = [];
 
-    private getterRegEx = (variableName: string) => new RegExp('var\\(' + variableName + '(,\\s?[#|\\w|-]+)?\\)');
-
     constructor(private globalVariables: GlobalVariablesInterface) {}
 
     /**
@@ -167,4 +165,6 @@ export class Instruction implements InstructionInterface {
 
         return newRule;
     }
+
+    private getterRegEx = (variableName: string) => new RegExp('var\\(' + variableName + '(,\\s?[#|\\w|-]+)?\\)');
 }
