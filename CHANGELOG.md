@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   default values for getters
+-   more tests
 
 ## [0.0.10] - 2020-03-16
 

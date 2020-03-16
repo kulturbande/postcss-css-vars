@@ -28,6 +28,14 @@ describe('Direct usage', () => {
     it('should support default values', async () => {
         await testFixture('direct_usage/default_value');
     });
+
+    it('should support default values with additional setter', async () => {
+        await testFixture('direct_usage/default_value_with_setter');
+    });
+
+    it('should support default values inside an attribute value', async () => {
+        await testFixture('direct_usage/default_value_inside_attribute_value');
+    });
 });
 
 describe('Root Level', () => {
