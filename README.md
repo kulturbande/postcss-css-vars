@@ -14,11 +14,13 @@
 .foo {
     --color: red;
     color: var(--color);
+    font-size: var(--font-size, 1em);
     border: 1px solid var(-color);
 }
 /* becomes */
 .foo {
     color: red;
+    font-size: 1em;
     border: 1px solid red;
 }
 ```
