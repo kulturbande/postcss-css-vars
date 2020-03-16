@@ -2,6 +2,9 @@ import { Declaration, Rule } from 'postcss';
 
 export interface VariableInterface {
     name: string;
+    defaultValue?: string | undefined;
+
+    hasDefaultValue(): boolean;
 
     /**
      * add setter declaration (which sets the value of the current variable)

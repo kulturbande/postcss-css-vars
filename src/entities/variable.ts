@@ -6,7 +6,11 @@ export class Variable implements VariableInterface {
     private getterDeclarations: Declaration[] = [];
     private getterRules: Rule[] = [];
 
-    constructor(public name: string) {}
+    constructor(public name: string, public defaultValue?: string | undefined) {}
+
+    public hasDefaultValue(): boolean {
+        return this.defaultValue !== undefined;
+    }
 
     /**
      * add setter declaration (which sets the value of the current variable)

@@ -34,8 +34,9 @@ export class Calculator {
         this.rulePermutations = [];
 
         this.variables.forEach((variable: VariableInterface) => {
-            variable.getSetterDeclarations().forEach((setterDeclaration: Declaration) => {
-                variable.getGetterDeclarations().forEach((getterDeclaration: Declaration) => {
+            variable.getGetterDeclarations().forEach((getterDeclaration: Declaration) => {
+                this.prepareDefaultValues(variable, getterDeclaration);
+                variable.getSetterDeclarations().forEach((setterDeclaration: Declaration) => {
                     this.compareDeclarations(variable, setterDeclaration, getterDeclaration);
                 });
             });
@@ -87,6 +88,15 @@ export class Calculator {
 
         rule.prefixSelectors = getGeneratedSelectors(selectors);
         this.instruction.addRule(rule, variables);
+    }
+
+    private prepareDefaultValues(variable: VariableInterface, getterDeclaration: Declaration) {
+        if (variable.hasDefaultValue()) {
+            this.instruction.changeDeclaration(getterDeclaration, {
+                name: variable.name,
+                value: variable.defaultValue as string,
+            });
+        }
     }
 
     /**

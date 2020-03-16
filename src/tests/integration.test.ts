@@ -24,6 +24,10 @@ describe('Direct usage', () => {
     it('should support multiple selectors with the same variable', async () => {
         await testFixture('direct_usage/two_selectors');
     });
+
+    it('should support default values', async () => {
+        await testFixture('direct_usage/default_value');
+    });
 });
 
 describe('Root Level', () => {

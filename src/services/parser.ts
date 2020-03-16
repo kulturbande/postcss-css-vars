@@ -1,4 +1,4 @@
-import { Declaration, Root, Rule } from 'postcss';
+import { Declaration, Root } from 'postcss';
 import { VariableInterface } from '../entities/interfaces/variable.interface';
 import { Variable } from '../entities/variable';
 
@@ -32,11 +32,11 @@ export class Parser {
      */
     private parseDeclaration(declaration: Declaration) {
         const setter = declaration.prop.match(/^(--[\w|\-]+)/);
-        const getter = declaration.value.match(/var\((--[\w|\-]+)\)/g);
+        const getter = declaration.value.match(/var\((--[\w|\-]+)(,\s?[#|\w|\-]+)?\)/g);
 
-        const initializeVariable = (name: string): string => {
+        const initializeVariable = (name: string, defaultValue?: string | undefined): string => {
             if (typeof this.variables[name] === 'undefined') {
-                this.variables[name] = new Variable(name);
+                this.variables[name] = new Variable(name, defaultValue);
             }
             return name;
         };
@@ -47,8 +47,15 @@ export class Parser {
         } else if (getter !== null) {
             // multiple getters are possible; capture groups don't work here atm.
             getter.forEach((match: string) => {
-                const name: string = match.replace(/var\(|\)/g, '');
-                initializeVariable(name);
+                const getterEntry: string[] = match.replace(/var\(|\)/g, '').split(',');
+                const name = getterEntry[0].trim();
+                let defaultValue;
+
+                if (getterEntry[1]) {
+                    defaultValue = getterEntry[1].trim();
+                }
+
+                initializeVariable(name, defaultValue);
                 this.variables[name].addGetterDeclaration(declaration);
             });
         }

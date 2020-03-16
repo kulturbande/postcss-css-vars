@@ -42,7 +42,7 @@ export class Instruction implements InstructionInterface {
          */
         const generateReplacedValue = (valueToReplace: string, variables: VariableEntryInterface[]): string => {
             variables.forEach((entry: VariableEntryInterface) => {
-                valueToReplace = valueToReplace.replace(new RegExp('var\\(' + entry.name + '\\)'), entry.value);
+                valueToReplace = valueToReplace.replace(new RegExp('var\\(' + entry.name + '.*\\)'), entry.value);
             });
             return valueToReplace;
         };
