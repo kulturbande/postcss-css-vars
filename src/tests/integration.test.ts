@@ -58,6 +58,14 @@ describe('Root Level', () => {
     it('should allow multiple root definitions', async () => {
         await testFixture('root_level/multiple_root');
     });
+
+    it('should work for :root - pseudo selector with default values', async () => {
+        await testFixture('root_level/root_with_default_value');
+    });
+
+    it('should work for body selector with default values', async () => {
+        await testFixture('root_level/body_with_default_value');
+    });
 });
 
 describe('Permutation', () => {
