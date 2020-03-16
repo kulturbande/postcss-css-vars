@@ -114,4 +114,8 @@ describe('Media Queries', () => {
     it('should support multiple (complex) media queries', async () => {
         await testFixture('media_queries/multiple_complex');
     });
+
+    it('should support media queries with default values', async () => {
+        await testFixture('media_queries/default_value');
+    });
 });

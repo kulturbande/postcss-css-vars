@@ -1,0 +1,9 @@
+.foo {
+    font-size: var(--font-size, 1em);
+}
+
+@media (min-width: 30em) and (orientation: landscape) {
+    body {
+        --font-size: 2em;
+    }
+}

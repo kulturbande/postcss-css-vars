@@ -16,6 +16,8 @@ export class Instruction implements InstructionInterface {
     private replaceDeclarations: DeclarationReplaceInterface[] = [];
     private rulesToCreate: InternalRuleDefinitionInterface[] = [];
 
+    private getterRegEx = (variableName: string) => new RegExp('var\\(' + variableName + '(,\\s?[#|\\w|-]+)?\\)');
+
     constructor(private globalVariables: GlobalVariablesInterface) {}
 
     /**
@@ -42,7 +44,7 @@ export class Instruction implements InstructionInterface {
          */
         const generateReplacedValue = (valueToReplace: string, variables: VariableEntryInterface[]): string => {
             variables.forEach((entry: VariableEntryInterface) => {
-                valueToReplace = valueToReplace.replace(new RegExp('var\\(' + entry.name + '.*\\)'), entry.value);
+                valueToReplace = valueToReplace.replace(this.getterRegEx(entry.name), entry.value);
             });
             return valueToReplace;
         };
@@ -160,7 +162,7 @@ export class Instruction implements InstructionInterface {
         const variables = [...rule.variables, ...this.globalVariables.all(rule.definition.ruleOrigin)];
 
         variables.forEach((variable: VariableEntryInterface) => {
-            newRule.replaceValues(new RegExp('var\\(' + variable.name + '\\)'), variable.value);
+            newRule.replaceValues(this.getterRegEx(variable.name), variable.value);
         });
 
         return newRule;
