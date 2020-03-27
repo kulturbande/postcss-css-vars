@@ -33,7 +33,7 @@
 }
 .foo {
     color: var(--color);
-    border: 1px solid var(-color);
+    border: 1px solid var(--color);
 }
 /* becomes */
 .foo {
@@ -50,7 +50,7 @@
 }
 .foo {
     color: var(--color);
-    border: 1px solid var(-color);
+    border: 1px solid var(--color);
 }
 @media (min-width: 30em) {
     --color: orange;
@@ -63,7 +63,6 @@
 @media (min-width: 30em) {
     .foo {
         color: orange;
-        border: 1px solid orange;
     }
 }
 ```
@@ -76,7 +75,7 @@
 }
 .foo {
     color: var(--color);
-    border: 1px solid var(-color);
+    border: 1px solid var(--color);
 }
 .orange {
     --color: orange;
