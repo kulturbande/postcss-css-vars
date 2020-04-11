@@ -1,10 +1,8 @@
 import { Declaration, Rule } from 'postcss';
+import { GetterDeclarationInterface } from './getterDeclaration.interface';
 
 export interface VariableInterface {
     name: string;
-    defaultValue?: string | undefined;
-
-    hasDefaultValue(): boolean;
 
     /**
      * add setter declaration (which sets the value of the current variable)
@@ -14,9 +12,9 @@ export interface VariableInterface {
 
     /**
      * add getter declaration (which uses the current variable)
-     * @param declaration getter declaration to store
+     * @param getterDeclaration getter declaration to store
      */
-    addGetterDeclaration(declaration: Declaration): void;
+    addGetterDeclaration(getterDeclaration: GetterDeclarationInterface): void;
 
     /**
      * get all stored setter declarations
@@ -26,7 +24,7 @@ export interface VariableInterface {
     /**
      * get all stored getter declarations
      */
-    getGetterDeclarations(): Declaration[];
+    getGetterDeclarations(): GetterDeclarationInterface[];
 
     /**
      * get all stored getter rules

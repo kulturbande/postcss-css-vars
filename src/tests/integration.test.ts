@@ -96,6 +96,10 @@ describe('Permutation', () => {
     it('should work with multiple selectors', async () => {
         await testFixture('permutation/multiple_selectors');
     });
+
+    it('should work with default values', async () => {
+        await testFixture('permutation/default_value');
+    });
 });
 
 describe('Media Queries', () => {

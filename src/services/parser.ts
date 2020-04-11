@@ -28,15 +28,14 @@ export class Parser {
     /**
      * Parse a declaration of each rule to setup a collection of variables
      * @param declaration
-     * @param rule
      */
     private parseDeclaration(declaration: Declaration) {
         const setter = declaration.prop.match(/^(--[\w|\-]+)/);
         const getter = declaration.value.match(/var\((--[\w|\-]+)(,\s?[#|\w|\-]+)?\)/g);
 
-        const initializeVariable = (name: string, defaultValue?: string | undefined): string => {
+        const initializeVariable = (name: string): string => {
             if (typeof this.variables[name] === 'undefined') {
-                this.variables[name] = new Variable(name, defaultValue);
+                this.variables[name] = new Variable(name);
             }
             return name;
         };
@@ -55,8 +54,8 @@ export class Parser {
                     defaultValue = getterEntry[1].trim();
                 }
 
-                initializeVariable(name, defaultValue);
-                this.variables[name].addGetterDeclaration(declaration);
+                initializeVariable(name);
+                this.variables[name].addGetterDeclaration({ declaration, defaultValue });
             });
         }
     }

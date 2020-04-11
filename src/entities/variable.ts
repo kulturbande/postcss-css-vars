@@ -1,16 +1,13 @@
 import { Declaration, Rule } from 'postcss';
+import { GetterDeclarationInterface } from './interfaces/getterDeclaration.interface';
 import { VariableInterface } from './interfaces/variable.interface';
 
 export class Variable implements VariableInterface {
     private setterDeclarations: Declaration[] = [];
-    private getterDeclarations: Declaration[] = [];
+    private getterDeclarations: GetterDeclarationInterface[] = [];
     private getterRules: Rule[] = [];
 
-    constructor(public name: string, public defaultValue?: string | undefined) {}
-
-    public hasDefaultValue(): boolean {
-        return this.defaultValue !== undefined;
-    }
+    constructor(public name: string) {}
 
     /**
      * add setter declaration (which sets the value of the current variable)
@@ -22,11 +19,11 @@ export class Variable implements VariableInterface {
 
     /**
      * add getter declaration (which uses the current variable)
-     * @param declaration getter declaration to store
+     * @param getterDeclaration getter declaration to store
      */
-    public addGetterDeclaration(declaration: Declaration) {
-        this.getterDeclarations.push(declaration);
-        const rule: Rule = declaration.parent as Rule;
+    public addGetterDeclaration(getterDeclaration: GetterDeclarationInterface) {
+        this.getterDeclarations.push(getterDeclaration);
+        const rule: Rule = getterDeclaration.declaration.parent as Rule;
         if (this.getterRules.indexOf(rule) === -1) {
             this.getterRules.push(rule);
         }
@@ -42,7 +39,7 @@ export class Variable implements VariableInterface {
     /**
      * get all stored getter declarations
      */
-    public getGetterDeclarations(): Declaration[] {
+    public getGetterDeclarations(): GetterDeclarationInterface[] {
         return this.getterDeclarations;
     }
 

@@ -1,0 +1,8 @@
+.foo {
+    color: red;
+    font-weight: 700;
+}
+
+.orange .foo {
+    color: orange;
+}

@@ -1,6 +1,7 @@
 import { AtRule, Declaration, Rule } from 'postcss';
 import { GlobalVariables } from '../entities/globalVariables';
 import { Instruction } from '../entities/instruction';
+import { GetterDeclarationInterface } from '../entities/interfaces/getterDeclaration.interface';
 import { GlobalVariablesInterface } from '../entities/interfaces/globalVariables.interface';
 import { InstructionInterface } from '../entities/interfaces/instruction.interface';
 import { VariableInterface } from '../entities/interfaces/variable.interface';
@@ -34,24 +35,25 @@ export class Calculator {
         this.rulePermutations = [];
 
         this.variables.forEach((variable: VariableInterface) => {
-            variable.getGetterDeclarations().forEach((getterDeclaration: Declaration) => {
+            variable.getGetterDeclarations().forEach((getterDeclaration: GetterDeclarationInterface) => {
                 this.prepareDefaultValues(variable, getterDeclaration);
                 variable.getSetterDeclarations().forEach((setterDeclaration: Declaration) => {
-                    this.compareDeclarations(variable, setterDeclaration, getterDeclaration);
+                    this.compareDeclarations(variable, setterDeclaration, getterDeclaration.declaration);
                 });
             });
         });
 
-        this.rulePermutations.forEach(permutation => this.addRulePermutation(permutation));
+        // the rule permutations array was generated in the compareDeclarations - step
+        this.rulePermutations.forEach(permutation => this.calculateRulePermutation(permutation));
 
         return this.instruction;
     }
 
     /**
-     * create new permutation rule (necessary for multiple setters for one getter)
+     * calculate and create new permutation rule (necessary for multiple setters for one getter)
      * @param permutation permutation to add
      */
-    private addRulePermutation(permutation: RulePermutationInterface) {
+    private calculateRulePermutation(permutation: RulePermutationInterface) {
         if (permutation.settings.length < 2) {
             return;
         }
@@ -90,11 +92,16 @@ export class Calculator {
         this.instruction.addRule(rule, variables);
     }
 
-    private prepareDefaultValues(variable: VariableInterface, getterDeclaration: Declaration) {
-        if (variable.hasDefaultValue()) {
-            this.instruction.changeDeclaration(getterDeclaration, {
+    /**
+     * change the declaration possible default values
+     * @param variable
+     * @param getterDeclaration
+     */
+    private prepareDefaultValues(variable: VariableInterface, getterDeclaration: GetterDeclarationInterface) {
+        if (getterDeclaration.defaultValue) {
+            this.instruction.changeDeclaration(getterDeclaration.declaration, {
                 name: variable.name,
-                value: variable.defaultValue as string,
+                value: getterDeclaration.defaultValue as string,
             });
         }
     }
@@ -215,7 +222,6 @@ export class Calculator {
      * replace with global variable
      * @param getterDeclaration getter declaration that should be replaced
      * @param variableName name of the replaced variable
-     * @param level media query level
      */
     private replaceWithGlobalVariable(getterDeclaration: Declaration, variableName: string): boolean {
         const value = this.globalVariables.get(variableName, this.getRule(getterDeclaration));

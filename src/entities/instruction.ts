@@ -86,7 +86,7 @@ export class Instruction implements InstructionInterface {
     /**
      * add a new rule to the CSS
      * @param ruleDefinition rule information which are necessary to create a new one
-     * @param variable variable that should be replaced
+     * @param variables variable that should be replaced
      */
     public addRule(ruleDefinition: RuleDefinitionInterface, variables: VariableEntryInterface[]): InstructionInterface {
         // be aware that the comparison between the whole each entry of the object is another one, that the object
@@ -159,6 +159,18 @@ export class Instruction implements InstructionInterface {
 
         const variables = [...rule.variables, ...this.globalVariables.all(rule.definition.ruleOrigin)];
 
+        // clean up declarations that are not necessary for the new rule
+        newRule.walkDecls((decl: Declaration) => {
+            if (
+                variables.findIndex(
+                    (variable: VariableEntryInterface) => decl.value.search(this.getterRegEx(variable.name)) !== -1
+                ) === -1
+            ) {
+                decl.remove();
+            }
+        });
+
+        // replace all variables
         variables.forEach((variable: VariableEntryInterface) => {
             newRule.replaceValues(this.getterRegEx(variable.name), variable.value);
         });

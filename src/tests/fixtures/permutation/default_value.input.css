@@ -1,0 +1,8 @@
+.orange {
+    --color: orange;
+}
+
+.foo {
+    color: var(--color, red);
+    font-weight: var(--font-weight, 700);
+}

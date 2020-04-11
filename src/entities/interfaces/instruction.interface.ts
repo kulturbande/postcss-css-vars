@@ -21,7 +21,7 @@ export interface InstructionInterface {
     /**
      * add a new rule to the CSS
      * @param ruleDefinition rule information which are necessary to create a new one
-     * @param variable variable that should be replaced
+     * @param variables variable that should be replaced
      */
     addRule(ruleDefinition: RuleDefinitionInterface, variables: VariableEntryInterface[]): InstructionInterface;
 
